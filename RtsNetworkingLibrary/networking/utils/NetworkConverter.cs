@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using RtsNetworkingLibrary.networking.messages;
+using RtsNetworkingLibrary.networking.messages.@base;
 
 namespace RtsNetworkingLibrary.networking.utils
 {

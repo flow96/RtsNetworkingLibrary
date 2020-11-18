@@ -1,3 +1,4 @@
+using System.Threading;
 using RtsNetworkingLibrary.server;
 using RtsNetworkingLibrary.server.utils;
 
@@ -18,6 +19,7 @@ namespace TestServer.test
             ServerSettings settings = new ServerSettings();
             settings.port = 4045;
             settings.maxPlayers = 2;
+            settings.headerBufferByteSze = 4;
             _server = new Server();
             _server.StartServer(settings);
         }

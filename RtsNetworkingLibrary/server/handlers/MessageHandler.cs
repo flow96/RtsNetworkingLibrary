@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using RtsNetworkingLibrary.networking.messages;
+using RtsNetworkingLibrary.networking.messages.@base;
 using UnityEngine;
 
 namespace RtsNetworkingLibrary.server.handlers

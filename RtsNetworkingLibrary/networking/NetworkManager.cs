@@ -3,7 +3,9 @@ using RtsNetworkingLibrary.client;
 using RtsNetworkingLibrary.server;
 using RtsNetworkingLibrary.server.handlers;
 using RtsNetworkingLibrary.server.utils;
+using RtsNetworkingLibrary.utils;
 using UnityEngine;
+using Logger = RtsNetworkingLibrary.utils.Logger;
 
 namespace RtsNetworkingLibrary.networking
 {
@@ -14,7 +16,13 @@ namespace RtsNetworkingLibrary.networking
         private Client _client;
         
         private ServerSettings _serverSettings;
-        
+        private Logger _logger;
+
+        public NetworkManager()
+        {
+            _logger = new Logger(this.GetType().Name);
+        }
+
         private void Awake()
         {
             _serverSettings = GetComponent<ServerSettings>();
@@ -24,6 +32,8 @@ namespace RtsNetworkingLibrary.networking
         {
             // Prevent the Networkmanager from being destroyed
             DontDestroyOnLoad(this);
+            // Set logging to Unity logging, since this class is used in unity projects only
+            Logger.LoggerType = LoggerType.UNITY;
             _server = new Server();
             _client = new Client();
         }

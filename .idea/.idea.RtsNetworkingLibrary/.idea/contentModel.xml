@@ -4,18 +4,21 @@
     <e p="C:\Users\Flo\AppData\Local\JetBrains\Rider2020.1\extResources" t="IncludeRecursive" />
     <e p="C:\Users\Flo\AppData\Local\JetBrains\Rider2020.1\resharper-host\Local\Transient\ReSharperHost\v201\SolutionCaches\_RtsNetworkingLibrary.475245720.00" t="ExcludeRecursive" />
     <e p="C:\Users\Flo\Documents\Projekte\RtsNetworkingLibrary" t="IncludeFlat">
+      <e p=".git\info\exclude" t="IncludeRecursive" />
       <e p="packages" t="ExcludeRecursive" />
       <e p="RtsNetworkingLibrary" t="IncludeRecursive">
         <e p="bin" t="ExcludeRecursive" />
         <e p="client" t="Include">
           <e p="Client.cs" t="Include" />
         </e>
-        <e p="MonoBehaviour1.cs" t="Include" />
         <e p="networking" t="Include">
           <e p="messages" t="Include">
             <e p="base" t="Include">
               <e p="NetworkMessage.cs" t="Include" />
               <e p="RawDataMessage.cs" t="Include" />
+            </e>
+            <e p="connection" t="Include">
+              <e p="ConnectMessage.cs" t="Include" />
             </e>
           </e>
           <e p="NetworkManager.cs" t="Include" />
@@ -37,6 +40,9 @@
           <e p="utils" t="Include">
             <e p="ServerSettings.cs" t="Include" />
           </e>
+        </e>
+        <e p="utils" t="Include">
+          <e p="Logger.cs" t="Include" />
         </e>
       </e>
       <e p="RtsNetworkingLibrary.sln" t="IncludeFlat" />

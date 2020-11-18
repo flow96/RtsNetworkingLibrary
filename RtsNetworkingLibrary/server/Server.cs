@@ -2,11 +2,14 @@ using System;
 using System.Net;
 using System.Net.Sockets;
 using RtsNetworkingLibrary.server.utils;
+using RtsNetworkingLibrary.utils;
 
 namespace RtsNetworkingLibrary.server
 {
     public class Server
     {
+        private readonly Logger _logger;
+        
         private uint clientCounter = 0;
         
         private TcpListener _server;
@@ -15,7 +18,12 @@ namespace RtsNetworkingLibrary.server
         // Clients
         private ClientHandler[] clients;
         private ServerSettings _serverSettings;
-        
+
+        public Server()
+        {
+            _logger = new Logger(this.GetType().Name);
+        }
+
         public bool ServerRunning { private set; get; } = false;
 
         
@@ -29,6 +37,7 @@ namespace RtsNetworkingLibrary.server
                 ServerRunning = true;
                 _server.Start(10);
                 _server.BeginAcceptTcpClient(AcceptTcpClients, null);
+                _logger.Debug("Server started");
                 //Debug.Log("Test");
             }
         }
@@ -37,8 +46,8 @@ namespace RtsNetworkingLibrary.server
         {
             foreach (ClientHandler client in clients)
             {
-                client._socket.Close();
-                client._socket.Dispose();
+                client._client.Close();
+                client._client.Dispose();
             }
             _server.Server.Shutdown(SocketShutdown.Both);
             _server.Stop();
@@ -50,13 +59,10 @@ namespace RtsNetworkingLibrary.server
         private void AcceptTcpClients(IAsyncResult ar)
         {
             TcpClient client = _server.EndAcceptTcpClient(ar);
-            clients[clientCounter++] = new ClientHandler(client, this);
+            clients[clientCounter++] = new ClientHandler(client, this, _serverSettings);
+            _logger.Debug(" >> Server: New Client connected");
             if(clientCounter < _serverSettings.maxPlayers)
                 _server.BeginAcceptTcpClient(AcceptTcpClients, null);
-            //Debug.Log(" >> New client connected");
-            byte[] data = BitConverter.GetBytes(clientCounter);
-            client.GetStream().Write(data, 0, data.Length);
-            client.Close();
         }
 
     }

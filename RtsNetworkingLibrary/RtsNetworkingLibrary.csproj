@@ -41,9 +41,9 @@
     </ItemGroup>
     <ItemGroup>
         <Compile Include="client\Client.cs" />
-        <Compile Include="MonoBehaviour1.cs" />
         <Compile Include="networking\messages\base\NetworkMessage.cs" />
         <Compile Include="networking\messages\base\RawDataMessage.cs" />
+        <Compile Include="networking\messages\connection\ConnectMessage.cs" />
         <Compile Include="networking\NetworkManager.cs" />
         <Compile Include="networking\utils\NetworkConverter.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
@@ -51,6 +51,7 @@
         <Compile Include="server\handlers\MessageHandler.cs" />
         <Compile Include="server\Server.cs" />
         <Compile Include="server\utils\ServerSettings.cs" />
+        <Compile Include="utils\Logger.cs" />
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
     <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

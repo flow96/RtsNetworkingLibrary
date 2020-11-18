@@ -2,7 +2,7 @@
 
 using System;
 
-namespace RtsNetworkingLibrary.networking.messages
+namespace RtsNetworkingLibrary.networking.messages.@base
 {
     [Serializable]
     public class RawDataMessage
