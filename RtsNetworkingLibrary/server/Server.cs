@@ -1,6 +1,7 @@
 using System;
 using System.Net;
 using System.Net.Sockets;
+using RtsNetworkingLibrary.server.handlers;
 using RtsNetworkingLibrary.server.utils;
 using RtsNetworkingLibrary.utils;
 
@@ -18,6 +19,7 @@ namespace RtsNetworkingLibrary.server
         // Clients
         private ClientHandler[] clients;
         private ServerSettings _serverSettings;
+        private MessageHandler _messageHandler;
 
         public Server()
         {
@@ -27,11 +29,12 @@ namespace RtsNetworkingLibrary.server
         public bool ServerRunning { private set; get; } = false;
 
         
-        public void StartServer(ServerSettings settings)
+        public void StartServer(ServerSettings settings, MessageHandler messageHandler)
         {
             if (!ServerRunning)
             {
                 this._serverSettings = settings;
+                this._messageHandler = messageHandler;
                 _server = new TcpListener(IPAddress.Any, settings.port);
                 clients = new ClientHandler[settings.maxPlayers];
                 ServerRunning = true;
@@ -44,14 +47,18 @@ namespace RtsNetworkingLibrary.server
 
         public void StopServer()
         {
-            foreach (ClientHandler client in clients)
+            if (_server != null && ServerRunning)
             {
-                client._client.Close();
-                client._client.Dispose();
+                foreach (ClientHandler client in clients)
+                {
+                    if(client == null)
+                        continue;
+                    client._client?.Close();
+                    client._client?.Dispose();
+                }
+                _server.Stop();
+                _server.Server.Dispose();
             }
-            _server.Server.Shutdown(SocketShutdown.Both);
-            _server.Stop();
-            _server.Server.Dispose();
             ServerRunning = false;
             clientCounter = 0;
         }
@@ -59,7 +66,7 @@ namespace RtsNetworkingLibrary.server
         private void AcceptTcpClients(IAsyncResult ar)
         {
             TcpClient client = _server.EndAcceptTcpClient(ar);
-            clients[clientCounter++] = new ClientHandler(client, this, _serverSettings);
+            clients[clientCounter++] = new ClientHandler(client, this, _serverSettings, _messageHandler);
             _logger.Debug(" >> Server: New Client connected");
             if(clientCounter < _serverSettings.maxPlayers)
                 _server.BeginAcceptTcpClient(AcceptTcpClients, null);

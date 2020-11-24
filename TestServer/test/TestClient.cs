@@ -1,12 +1,12 @@
 using System;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading;
 using RtsNetworkingLibrary.networking.messages.@base;
 using RtsNetworkingLibrary.networking.messages.connection;
 using RtsNetworkingLibrary.networking.messages.entities;
 using RtsNetworkingLibrary.networking.utils;
 using RtsNetworkingLibrary.utils;
-using UnityEngine;
 using Logger = RtsNetworkingLibrary.utils.Logger;
 
 namespace TestServer.test
@@ -22,7 +22,7 @@ namespace TestServer.test
         static void Main(string[] args)
         {
             Logger.LoggerType = LoggerType.DEDICATED;
-            new TestServer();
+            //new TestServer();
             new TestClient();
             
             //Thread.Sleep(2000);
@@ -42,7 +42,7 @@ namespace TestServer.test
             client.Connect(ipEndPoint);
             _logger.Debug("Connected: " + client.Connected);
 
-            BuildMessage buildMessage = new BuildMessage("Flo", 1, "TestPrefab.prefab");
+            BuildMessage buildMessage = new BuildMessage("Flo", 1, "test", new Vector(),new Vector());
             RawDataMessage rMessage = NetworkConverter.Serialize(buildMessage);
             byte[] header = BitConverter.GetBytes(rMessage.data.Length);
             client.GetStream().Write(header, 0, header.Length);
@@ -52,12 +52,13 @@ namespace TestServer.test
             RawDataMessage rawMessage = NetworkConverter.Serialize(connectMessage);
             byte[] headerBuffer = BitConverter.GetBytes(rawMessage.data.Length);
 
-            for (int i = 0; i < 1; i++)
+            for (int i = 0; i < 2; i++)
             {
                 client.GetStream().Write(headerBuffer,0,headerBuffer.Length);
                 client.GetStream().Write(rawMessage.data, 0,rawMessage.data.Length);
             
                 _logger.Debug(" >> Client message sent " + i);
+                Thread.Sleep(20);
             }
             
             client.Close();

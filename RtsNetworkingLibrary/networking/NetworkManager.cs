@@ -17,6 +17,7 @@ namespace RtsNetworkingLibrary.networking
         
         private ServerSettings _serverSettings;
         private Logger _logger;
+        private MessageHandler _messageHandler;
         
         /*
          * Indicates if the local instance of this NetworkManager is the hosting server
@@ -32,10 +33,8 @@ namespace RtsNetworkingLibrary.networking
         private void Awake()
         {
             _serverSettings = GetComponent<ServerSettings>();
-        }
-
-        private void Start()
-        {
+            _messageHandler = GetComponent<MessageHandler>();
+            
             // Prevent the Networkmanager from being destroyed
             DontDestroyOnLoad(this);
             // Set logging to Unity logging, since this class is used in unity projects only
@@ -56,7 +55,7 @@ namespace RtsNetworkingLibrary.networking
 
         public void StartServer()
         {
-            _server.StartServer(this._serverSettings);
+            _server.StartServer(this._serverSettings, this._messageHandler);
             IsServer = true;
         }
 
@@ -70,5 +69,6 @@ namespace RtsNetworkingLibrary.networking
         {
             get => _server;
         }
+
     }
 }

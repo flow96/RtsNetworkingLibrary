@@ -39,8 +39,9 @@
         <e p="server" t="Include">
           <e p="ClientHandler.cs" t="Include" />
           <e p="handlers" t="Include">
+            <e p="CustomMessageParser.cs" t="Include" />
+            <e p="DefaultMessageParser.cs" t="Include" />
             <e p="MessageHandler.cs" t="Include" />
-            <e p="MessageHandlerInterface.cs" t="Include" />
           </e>
           <e p="Server.cs" t="Include" />
           <e p="utils" t="Include">
@@ -50,6 +51,7 @@
         <e p="utils" t="Include">
           <e p="Consts.cs" t="Include" />
           <e p="Logger.cs" t="Include" />
+          <e p="Vector.cs" t="Include" />
         </e>
       </e>
       <e p="RtsNetworkingLibrary.sln" t="IncludeFlat" />

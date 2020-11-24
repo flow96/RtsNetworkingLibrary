@@ -51,12 +51,14 @@
         <Compile Include="networking\utils\NetworkConverter.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
         <Compile Include="server\ClientHandler.cs" />
+        <Compile Include="server\handlers\CustomMessageParser.cs" />
+        <Compile Include="server\handlers\DefaultMessageParser.cs" />
         <Compile Include="server\handlers\MessageHandler.cs" />
-        <Compile Include="server\handlers\MessageHandlerInterface.cs" />
         <Compile Include="server\Server.cs" />
         <Compile Include="server\utils\ServerSettings.cs" />
         <Compile Include="utils\Consts.cs" />
         <Compile Include="utils\Logger.cs" />
+        <Compile Include="utils\Vector.cs" />
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
     <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

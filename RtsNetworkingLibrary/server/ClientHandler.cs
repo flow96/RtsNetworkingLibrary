@@ -3,6 +3,7 @@ using System.Net.Sockets;
 using RtsNetworkingLibrary.networking.messages.@base;
 using RtsNetworkingLibrary.networking.messages.entities;
 using RtsNetworkingLibrary.networking.utils;
+using RtsNetworkingLibrary.server.handlers;
 using RtsNetworkingLibrary.server.utils;
 using RtsNetworkingLibrary.utils;
 
@@ -16,6 +17,7 @@ namespace RtsNetworkingLibrary.server
         public readonly TcpClient _client;
         public readonly Server _server;
         private readonly ServerSettings _serverSettings;
+        private readonly MessageHandler _messageHandler;
         
         private readonly NetworkStream _networkStream;
         
@@ -27,13 +29,14 @@ namespace RtsNetworkingLibrary.server
         private int _messageLength;
         
         
-        public ClientHandler(TcpClient client, Server server, ServerSettings serverSettings)
+        public ClientHandler(TcpClient client, Server server, ServerSettings serverSettings, MessageHandler messageHandler)
         {
             this._logger = new Logger(this.GetType().Name);
             this._client = client;
             this._server = server;
             this._networkStream = this._client.GetStream();
             this._serverSettings = serverSettings;
+            this._messageHandler = messageHandler;
             this._headerBuffer = new byte[_serverSettings.headerBufferByteSze];
             
             _networkStream.BeginRead(_headerBuffer, 0, _headerBuffer.Length, ReadHeader, null);
@@ -50,7 +53,6 @@ namespace RtsNetworkingLibrary.server
             _headerReadDelta += read;
             if (_headerReadDelta == _serverSettings.headerBufferByteSze) // Header complete
             {
-                _logger.Debug("Header fully received");
                 // Parse the data length and start reading
                 _messageLength = BitConverter.ToInt32(_headerBuffer, 0);
                 _dataBuffer = new byte[_messageLength];
@@ -72,21 +74,13 @@ namespace RtsNetworkingLibrary.server
                 HandleDisconnect("Received empty data, socket probably disconnected! Closing connection");
                 return;
             }
-
             _dataReadDelta += read;
             if (_dataReadDelta == _dataBuffer.Length)
             {
                 // Message fully received
-                // TODO Handle message
-                _logger.Debug("Message fully received");
                 RawDataMessage rawDataMessage = new RawDataMessage(_dataBuffer);
                 NetworkMessage msg = NetworkConverter.Deserialize(rawDataMessage);
-                _logger.Debug("Message is type of: " + msg.GetType());
-                if (msg is BuildMessage)
-                {
-                    BuildMessage buildMessage = (BuildMessage) msg;
-                    _logger.Debug("Prefab: " + buildMessage.prefabName);
-                }
+                _messageHandler.addMessage(msg);
                 ResetAndWaitForNext();
             }
             else
@@ -105,7 +99,6 @@ namespace RtsNetworkingLibrary.server
             _headerReadDelta = 0;
             _dataReadDelta = 0;
             _networkStream.BeginRead(_headerBuffer, 0, _headerBuffer.Length, ReadHeader, null);
-            _logger.Debug("Waiting for next message");
         }
 
         private void HandleDisconnect(string message = "Client disconnected!")
