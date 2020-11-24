@@ -17,6 +17,12 @@ namespace RtsNetworkingLibrary.networking
         
         private ServerSettings _serverSettings;
         private Logger _logger;
+        
+        /*
+         * Indicates if the local instance of this NetworkManager is the hosting server
+         * Mostly used to check if code can be executed or not
+         */
+        public bool IsServer { get; private set; } = false;
 
         public NetworkManager()
         {
@@ -51,11 +57,13 @@ namespace RtsNetworkingLibrary.networking
         public void StartServer()
         {
             _server.StartServer(this._serverSettings);
+            IsServer = true;
         }
 
         public void StopServer()
         {
             _server.StopServer();
+            IsServer = false;
         }
 
         public Server Server

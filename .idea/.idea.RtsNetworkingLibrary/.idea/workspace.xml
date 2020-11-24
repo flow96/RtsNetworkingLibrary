@@ -11,20 +11,25 @@
     <setting file="file://$PROJECT_DIR$/TestServer/test/TestServer.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/RtsNetworkingLibrary/networking/messages/connection/ConnectMessage.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/RtsNetworkingLibrary/server/ClientHandler.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/RtsNetworkingLibrary/utils/Consts.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/RtsNetworkingLibrary/server/handlers/MessageHandler.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/RtsNetworkingLibrary/networking/NetworkManager.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/RtsNetworkingLibrary/server/utils/ServerSettings.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/5DE66FF1-1FCB-4513-8463-255B392B032B/f5/9c05b7dc/NetworkStream.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/RtsNetworkingLibrary/networking/messages/entities/DestroyMessage.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/RtsNetworkingLibrary/networking/messages/base/NetworkMessage.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/RtsNetworkingLibrary/networking/utils/NetworkConverter.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/5DE66FF1-1FCB-4513-8463-255B392B032B/81/ed49bf4d/IPAddress.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/RtsNetworkingLibrary/networking/messages/base/RawDataMessage.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/RtsNetworkingLibrary/networking/messages/connection/DisconnectMessage.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/TestServer/test/TestClient.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/RtsNetworkingLibrary/server/Server.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/RtsNetworkingLibrary/server/handlers/MessageHandlerInterface.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/5DE66FF1-1FCB-4513-8463-255B392B032B/58/51148c4b/TcpListener.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/RtsNetworkingLibrary/client/Client.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/63DD8BF9-8CFA-4BA9-85AF-735EF1A56BA9/a1/7711f3c5/Stream.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/RtsNetworkingLibrary/utils/Logger.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/RtsNetworkingLibrary/networking/messages/entities/BuildMessage.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
@@ -42,19 +47,25 @@
         <option value="$PROJECT_DIR$/RtsNetworkingLibrary/networking/server/Server.cs" />
         <option value="$PROJECT_DIR$/RtsNetworkingLibrary/networking/TestClass.cs" />
         <option value="$PROJECT_DIR$/RtsNetworkingLibrary/client/Client.cs" />
-        <option value="$PROJECT_DIR$/RtsNetworkingLibrary/server/handlers/MessageHandler.cs" />
         <option value="$PROJECT_DIR$/.gitignore" />
-        <option value="$PROJECT_DIR$/RtsNetworkingLibrary/networking/messages/base/RawDataMessage.cs" />
-        <option value="$PROJECT_DIR$/RtsNetworkingLibrary/server/utils/ServerSettings.cs" />
         <option value="$PROJECT_DIR$/RtsNetworkingLibrary/utils/Logging.cs" />
-        <option value="$PROJECT_DIR$/RtsNetworkingLibrary/networking/messages/base/NetworkMessage.cs" />
         <option value="$PROJECT_DIR$/RtsNetworkingLibrary/networking/messages/connection/ConnectMessage.cs" />
-        <option value="$PROJECT_DIR$/RtsNetworkingLibrary/networking/NetworkManager.cs" />
         <option value="$PROJECT_DIR$/RtsNetworkingLibrary/server/Server.cs" />
         <option value="$PROJECT_DIR$/TestServer/test/TestServer.cs" />
         <option value="$PROJECT_DIR$/RtsNetworkingLibrary/utils/Logger.cs" />
-        <option value="$PROJECT_DIR$/TestServer/test/TestClient.cs" />
+        <option value="$PROJECT_DIR$/RtsNetworkingLibrary/utils/Consts.cs" />
         <option value="$PROJECT_DIR$/RtsNetworkingLibrary/server/ClientHandler.cs" />
+        <option value="$PROJECT_DIR$/RtsNetworkingLibrary/networking/messages/connection/DisconnectMessage.cs" />
+        <option value="$PROJECT_DIR$/RtsNetworkingLibrary/networking/messages/base/NetworkMessage.cs" />
+        <option value="$PROJECT_DIR$/RtsNetworkingLibrary/networking/messages/entities/DestroyMessage.cs" />
+        <option value="$PROJECT_DIR$/TestServer/test/TestClient.cs" />
+        <option value="$PROJECT_DIR$/RtsNetworkingLibrary/networking/messages/entities/BuildMessage.cs" />
+        <option value="$PROJECT_DIR$/RtsNetworkingLibrary/server/handlers/MessageHandlerInterface.cs" />
+        <option value="$PROJECT_DIR$/RtsNetworkingLibrary/networking/NetworkManager.cs" />
+        <option value="$PROJECT_DIR$/RtsNetworkingLibrary/networking/messages/entities/NetworkEntity.cs" />
+        <option value="$PROJECT_DIR$/RtsNetworkingLibrary/networking/messages/base/RawDataMessage.cs" />
+        <option value="$PROJECT_DIR$/RtsNetworkingLibrary/server/utils/ServerSettings.cs" />
+        <option value="$PROJECT_DIR$/RtsNetworkingLibrary/server/handlers/MessageHandler.cs" />
       </list>
     </option>
   </component>
@@ -124,6 +135,7 @@
       <workItem from="1605192454449" duration="140000" />
       <workItem from="1605212582886" duration="1126000" />
       <workItem from="1605693799995" duration="10584000" />
+      <workItem from="1606217784925" duration="5656000" />
     </task>
     <servers />
   </component>
@@ -141,22 +153,22 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="414" y="175" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1605109522894" />
-    <state width="1420" height="606" key="GridCell.Tab.0.bottom" timestamp="1605712573635">
+    <state width="1877" height="507" key="GridCell.Tab.0.bottom" timestamp="1606223821312">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1420" height="606" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1605712573635" />
-    <state width="1420" height="606" key="GridCell.Tab.0.center" timestamp="1605712573635">
+    <state width="1877" height="507" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1606223821312" />
+    <state width="1877" height="507" key="GridCell.Tab.0.center" timestamp="1606223821312">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1420" height="606" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1605712573635" />
-    <state width="1420" height="606" key="GridCell.Tab.0.left" timestamp="1605712573635">
+    <state width="1877" height="507" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1606223821312" />
+    <state width="1877" height="507" key="GridCell.Tab.0.left" timestamp="1606223821312">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1420" height="606" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1605712573635" />
-    <state width="1420" height="606" key="GridCell.Tab.0.right" timestamp="1605712573635">
+    <state width="1877" height="507" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1606223821312" />
+    <state width="1877" height="507" key="GridCell.Tab.0.right" timestamp="1606223821312">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1420" height="606" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1605712573635" />
+    <state width="1877" height="507" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1606223821312" />
     <state width="1877" height="375" key="GridCell.Tab.1.bottom" timestamp="1604935719237">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -217,9 +229,9 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="862" y="256" width="650" height="534" key="find.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1605703540551" />
-    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup" timestamp="1605704888652">
+    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup" timestamp="1606225277672">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1605704888652" />
+    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1606225277672" />
   </component>
 </project>

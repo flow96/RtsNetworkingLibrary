@@ -1,6 +1,7 @@
 using System;
 using System.Net.Sockets;
 using RtsNetworkingLibrary.networking.messages.@base;
+using RtsNetworkingLibrary.networking.messages.entities;
 using RtsNetworkingLibrary.networking.utils;
 using RtsNetworkingLibrary.server.utils;
 using RtsNetworkingLibrary.utils;
@@ -81,6 +82,11 @@ namespace RtsNetworkingLibrary.server
                 RawDataMessage rawDataMessage = new RawDataMessage(_dataBuffer);
                 NetworkMessage msg = NetworkConverter.Deserialize(rawDataMessage);
                 _logger.Debug("Message is type of: " + msg.GetType());
+                if (msg is BuildMessage)
+                {
+                    BuildMessage buildMessage = (BuildMessage) msg;
+                    _logger.Debug("Prefab: " + buildMessage.prefabName);
+                }
                 ResetAndWaitForNext();
             }
             else

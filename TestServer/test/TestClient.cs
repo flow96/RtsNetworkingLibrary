@@ -1,12 +1,13 @@
 using System;
 using System.Net;
 using System.Net.Sockets;
-using System.Threading;
 using RtsNetworkingLibrary.networking.messages.@base;
 using RtsNetworkingLibrary.networking.messages.connection;
+using RtsNetworkingLibrary.networking.messages.entities;
 using RtsNetworkingLibrary.networking.utils;
-using RtsNetworkingLibrary.server;
 using RtsNetworkingLibrary.utils;
+using UnityEngine;
+using Logger = RtsNetworkingLibrary.utils.Logger;
 
 namespace TestServer.test
 {
@@ -41,6 +42,12 @@ namespace TestServer.test
             client.Connect(ipEndPoint);
             _logger.Debug("Connected: " + client.Connected);
 
+            BuildMessage buildMessage = new BuildMessage("Flo", 1, "TestPrefab.prefab");
+            RawDataMessage rMessage = NetworkConverter.Serialize(buildMessage);
+            byte[] header = BitConverter.GetBytes(rMessage.data.Length);
+            client.GetStream().Write(header, 0, header.Length);
+            client.GetStream().Write(rMessage.data, 0, rMessage.data.Length);
+            
             ConnectMessage connectMessage = new ConnectMessage(System.Environment.UserName.ToString(), -1);
             RawDataMessage rawMessage = NetworkConverter.Serialize(connectMessage);
             byte[] headerBuffer = BitConverter.GetBytes(rawMessage.data.Length);

@@ -19,6 +19,11 @@
             </e>
             <e p="connection" t="Include">
               <e p="ConnectMessage.cs" t="Include" />
+              <e p="DisconnectMessage.cs" t="Include" />
+            </e>
+            <e p="entities" t="Include">
+              <e p="BuildMessage.cs" t="Include" />
+              <e p="DestroyMessage.cs" t="Include" />
             </e>
           </e>
           <e p="NetworkManager.cs" t="Include" />
@@ -35,6 +40,7 @@
           <e p="ClientHandler.cs" t="Include" />
           <e p="handlers" t="Include">
             <e p="MessageHandler.cs" t="Include" />
+            <e p="MessageHandlerInterface.cs" t="Include" />
           </e>
           <e p="Server.cs" t="Include" />
           <e p="utils" t="Include">
@@ -42,6 +48,7 @@
           </e>
         </e>
         <e p="utils" t="Include">
+          <e p="Consts.cs" t="Include" />
           <e p="Logger.cs" t="Include" />
         </e>
       </e>
