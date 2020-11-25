@@ -18,6 +18,8 @@ namespace TestServer.test
         private readonly Logger _logger;
         
         private static int port = 4045;
+
+        private TcpClient client;
         
         static void Main(string[] args)
         {
@@ -38,30 +40,27 @@ namespace TestServer.test
             IPEndPoint ipEndPoint = new IPEndPoint(ip, port);
             _logger.Debug("Ip Endpoint");
             _logger.Debug(ipEndPoint);
-            TcpClient client = new TcpClient();
+            client = new TcpClient();
             client.Connect(ipEndPoint);
             _logger.Debug("Connected: " + client.Connected);
 
             BuildMessage buildMessage = new BuildMessage("Flo", 1, "test", new Vector(),new Vector());
-            RawDataMessage rMessage = NetworkConverter.Serialize(buildMessage);
+            sendMessage(buildMessage);
+            
+            ConnectMessage connectMessage = new ConnectMessage(System.Environment.UserName.ToString(), 0);
+            
+            sendMessage(new DisconnectMessage(System.Environment.UserName.ToString(), -1));
+            
+            Thread.Sleep(2000);
+            //client.Close();
+        }
+
+        private void sendMessage(NetworkMessage networkMessage)
+        {
+            RawDataMessage rMessage = NetworkConverter.Serialize(networkMessage);
             byte[] header = BitConverter.GetBytes(rMessage.data.Length);
             client.GetStream().Write(header, 0, header.Length);
             client.GetStream().Write(rMessage.data, 0, rMessage.data.Length);
-            
-            ConnectMessage connectMessage = new ConnectMessage(System.Environment.UserName.ToString(), -1);
-            RawDataMessage rawMessage = NetworkConverter.Serialize(connectMessage);
-            byte[] headerBuffer = BitConverter.GetBytes(rawMessage.data.Length);
-
-            for (int i = 0; i < 2; i++)
-            {
-                client.GetStream().Write(headerBuffer,0,headerBuffer.Length);
-                client.GetStream().Write(rawMessage.data, 0,rawMessage.data.Length);
-            
-                _logger.Debug(" >> Client message sent " + i);
-                Thread.Sleep(20);
-            }
-            
-            client.Close();
         }
     }
 }

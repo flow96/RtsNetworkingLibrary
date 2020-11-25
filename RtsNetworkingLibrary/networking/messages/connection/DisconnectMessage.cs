@@ -7,7 +7,7 @@ namespace RtsNetworkingLibrary.networking.messages.connection
     [Serializable]
     public class DisconnectMessage : NetworkMessage
     {
-        public DisconnectMessage(string username, int userId) : base(username, userId)
+        public DisconnectMessage()
         {
         }
     }

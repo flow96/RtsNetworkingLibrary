@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using RtsNetworkingLibrary.networking.messages.@base;
@@ -18,21 +19,26 @@ namespace RtsNetworkingLibrary.server.handlers
         
         private RtsNetworkingLibrary.utils.Logger _logger;
         
-        private readonly ConcurrentQueue<NetworkMessage> _inboundMessages = new ConcurrentQueue<NetworkMessage>();
-        private readonly DefaultMessageParser _defaultMessageParser = new DefaultMessageParser();
+        private readonly ConcurrentQueue<InboundMessage> _inboundMessages = new ConcurrentQueue<InboundMessage>();
+        private DefaultMessageParser _defaultMessageParser;
         private ServerSettings _settings;
 
         MessageHandler()
         {
             _logger = new RtsNetworkingLibrary.utils.Logger(this.GetType().Name);
         }
-        
+
+        private void Awake()
+        {
+            _defaultMessageParser = gameObject.AddComponent<DefaultMessageParser>();
+        }
+
         private void Start()
         {
             this._settings = GetComponent<ServerSettings>();
         }
 
-        public void addMessage(NetworkMessage msg)
+        public void addMessage(InboundMessage msg)
         {
             _inboundMessages.Enqueue(msg);
         }
@@ -42,7 +48,7 @@ namespace RtsNetworkingLibrary.server.handlers
             byte handledMessages = 0; // Handling max < 255 messages per frame
             while (!_inboundMessages.IsEmpty && handledMessages++ < _settings.maxHandledMessagesPerFrame)
             {
-                NetworkMessage message;
+                InboundMessage message;
                 _inboundMessages.TryDequeue(out message);
                 if (!_defaultMessageParser.HandleMessage(message))
                 {

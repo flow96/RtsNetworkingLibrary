@@ -11,7 +11,7 @@ namespace RtsNetworkingLibrary.server
     {
         private readonly Logger _logger;
         
-        private uint clientCounter = 0;
+        private int clientCounter = 0;
         
         private TcpListener _server;
         private UdpClient _udpClient;
@@ -45,6 +45,12 @@ namespace RtsNetworkingLibrary.server
             }
         }
 
+        public void DisconnectClient(int clientId)
+        {
+            clients[clientId].Disconnect();
+            clients[clientId] = null;
+        }
+
         public void StopServer()
         {
             if (_server != null && ServerRunning)
@@ -53,8 +59,7 @@ namespace RtsNetworkingLibrary.server
                 {
                     if(client == null)
                         continue;
-                    client._client?.Close();
-                    client._client?.Dispose();
+                    client.Disconnect("Disconnecting client, due to server stopping");
                 }
                 _server.Stop();
                 _server.Server.Dispose();
@@ -66,7 +71,8 @@ namespace RtsNetworkingLibrary.server
         private void AcceptTcpClients(IAsyncResult ar)
         {
             TcpClient client = _server.EndAcceptTcpClient(ar);
-            clients[clientCounter++] = new ClientHandler(client, this, _serverSettings, _messageHandler);
+            clients[clientCounter] = new ClientHandler(client, this, _serverSettings, _messageHandler, clientCounter);
+            clientCounter++;
             _logger.Debug(" >> Server: New Client connected");
             if(clientCounter < _serverSettings.maxPlayers)
                 _server.BeginAcceptTcpClient(AcceptTcpClients, null);

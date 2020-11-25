@@ -18,6 +18,7 @@ namespace RtsNetworkingLibrary.networking
         private ServerSettings _serverSettings;
         private Logger _logger;
         private MessageHandler _messageHandler;
+        public int ClientId { get; private set; }    // Todo set the client id after ClientConnect
         
         /*
          * Indicates if the local instance of this NetworkManager is the hosting server

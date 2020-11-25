@@ -18,8 +18,8 @@ namespace RtsNetworkingLibrary.server
         public readonly Server _server;
         private readonly ServerSettings _serverSettings;
         private readonly MessageHandler _messageHandler;
-        
         private readonly NetworkStream _networkStream;
+        private readonly int _userid;
         
         private readonly byte[] _headerBuffer;
         private byte[] _dataBuffer;
@@ -29,7 +29,7 @@ namespace RtsNetworkingLibrary.server
         private int _messageLength;
         
         
-        public ClientHandler(TcpClient client, Server server, ServerSettings serverSettings, MessageHandler messageHandler)
+        public ClientHandler(TcpClient client, Server server, ServerSettings serverSettings, MessageHandler messageHandler, int userid)
         {
             this._logger = new Logger(this.GetType().Name);
             this._client = client;
@@ -37,6 +37,7 @@ namespace RtsNetworkingLibrary.server
             this._networkStream = this._client.GetStream();
             this._serverSettings = serverSettings;
             this._messageHandler = messageHandler;
+            this._userid = userid;
             this._headerBuffer = new byte[_serverSettings.headerBufferByteSze];
             
             _networkStream.BeginRead(_headerBuffer, 0, _headerBuffer.Length, ReadHeader, null);
@@ -47,7 +48,7 @@ namespace RtsNetworkingLibrary.server
             int read = _networkStream.EndRead(ar);
             if (read <= 0)
             {
-                HandleDisconnect("Received empty data, socket probably disconnected! Closing connection");
+                Disconnect("Received empty data, socket probably disconnected! Closing connection");
                 return;
             }
             _headerReadDelta += read;
@@ -71,7 +72,7 @@ namespace RtsNetworkingLibrary.server
             int read = _networkStream.EndRead(ar);
             if (read <= 0)
             {
-                HandleDisconnect("Received empty data, socket probably disconnected! Closing connection");
+                Disconnect("Received empty data, socket probably disconnected! Closing connection");
                 return;
             }
             _dataReadDelta += read;
@@ -80,7 +81,7 @@ namespace RtsNetworkingLibrary.server
                 // Message fully received
                 RawDataMessage rawDataMessage = new RawDataMessage(_dataBuffer);
                 NetworkMessage msg = NetworkConverter.Deserialize(rawDataMessage);
-                _messageHandler.addMessage(msg);
+                _messageHandler.addMessage(new InboundMessage(msg, this._userid));
                 ResetAndWaitForNext();
             }
             else
@@ -101,10 +102,11 @@ namespace RtsNetworkingLibrary.server
             _networkStream.BeginRead(_headerBuffer, 0, _headerBuffer.Length, ReadHeader, null);
         }
 
-        private void HandleDisconnect(string message = "Client disconnected!")
+        public void Disconnect(string message = "Client disconnected!")
         {
             _logger.Debug(message);
             _client.Close();
+            _client.Dispose();
         }
         
     }
