@@ -10,6 +10,9 @@
         <e p="bin" t="ExcludeRecursive" />
         <e p="client" t="Include">
           <e p="Client.cs" t="Include" />
+          <e p="handlers" t="Include">
+            <e p="DefaultClientMessageParser.cs" t="Include" />
+          </e>
         </e>
         <e p="networking" t="Include">
           <e p="messages" t="Include">
@@ -28,7 +31,12 @@
             </e>
           </e>
           <e p="NetworkManager.cs" t="Include" />
+          <e p="parser" t="Include">
+            <e p="BaseMessageParser.cs" t="Include" />
+            <e p="DefaultServerMessageParser.cs" t="Include" />
+          </e>
           <e p="utils" t="Include">
+            <e p="MessageHandler.cs" t="Include" />
             <e p="NetworkConverter.cs" t="Include" />
           </e>
         </e>
@@ -41,8 +49,6 @@
           <e p="ClientHandler.cs" t="Include" />
           <e p="handlers" t="Include">
             <e p="CustomMessageParser.cs" t="Include" />
-            <e p="DefaultMessageParser.cs" t="Include" />
-            <e p="MessageHandler.cs" t="Include" />
           </e>
           <e p="Server.cs" t="Include" />
           <e p="utils" t="Include">

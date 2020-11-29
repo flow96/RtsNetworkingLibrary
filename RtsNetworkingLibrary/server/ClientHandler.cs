@@ -1,7 +1,6 @@
 using System;
 using System.Net.Sockets;
 using RtsNetworkingLibrary.networking.messages.@base;
-using RtsNetworkingLibrary.networking.messages.entities;
 using RtsNetworkingLibrary.networking.utils;
 using RtsNetworkingLibrary.server.handlers;
 using RtsNetworkingLibrary.server.utils;
@@ -81,7 +80,7 @@ namespace RtsNetworkingLibrary.server
                 // Message fully received
                 RawDataMessage rawDataMessage = new RawDataMessage(_dataBuffer);
                 NetworkMessage msg = NetworkConverter.Deserialize(rawDataMessage);
-                _messageHandler.addMessage(new InboundMessage(msg, this._userid));
+                _messageHandler.AddServerMessage(msg);
                 ResetAndWaitForNext();
             }
             else
@@ -108,6 +107,12 @@ namespace RtsNetworkingLibrary.server
             _client.Close();
             _client.Dispose();
         }
-        
+
+        public void SendTcpMessage(RawDataMessage message)
+        {
+            byte[] header = BitConverter.GetBytes(message.data.Length);
+            _client.GetStream().Write(header, 0, header.Length);
+            _client.GetStream().Write(message.data, 0, message.data.Length);
+        }
     }
 }

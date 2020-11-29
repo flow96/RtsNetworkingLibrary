@@ -1,6 +1,9 @@
 using System;
 using System.Net;
 using System.Net.Sockets;
+using RtsNetworkingLibrary.networking.messages.@base;
+using RtsNetworkingLibrary.networking.messages.connection;
+using RtsNetworkingLibrary.networking.utils;
 using RtsNetworkingLibrary.server.handlers;
 using RtsNetworkingLibrary.server.utils;
 using RtsNetworkingLibrary.utils;
@@ -78,5 +81,17 @@ namespace RtsNetworkingLibrary.server
                 _server.BeginAcceptTcpClient(AcceptTcpClients, null);
         }
 
+        public void TcpBroadcast(RawDataMessage message)
+        {
+            if (!ServerRunning)
+            {
+                throw new Exception("Server hasn't been started yet");
+            }
+            foreach (ClientHandler clientHandler in clients)
+            {
+                clientHandler?.SendTcpMessage(message);
+            }
+        }
+        
     }
 }

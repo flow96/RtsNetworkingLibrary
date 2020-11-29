@@ -41,6 +41,7 @@
     </ItemGroup>
     <ItemGroup>
         <Compile Include="client\Client.cs" />
+        <Compile Include="client\handlers\DefaultClientMessageParser.cs" />
         <Compile Include="networking\messages\base\InboundMessage.cs" />
         <Compile Include="networking\messages\base\NetworkMessage.cs" />
         <Compile Include="networking\messages\base\RawDataMessage.cs" />
@@ -49,12 +50,13 @@
         <Compile Include="networking\messages\entities\BuildMessage.cs" />
         <Compile Include="networking\messages\entities\DestroyMessage.cs" />
         <Compile Include="networking\NetworkManager.cs" />
+        <Compile Include="networking\parser\BaseMessageParser.cs" />
+        <Compile Include="networking\parser\DefaultServerMessageParser.cs" />
+        <Compile Include="networking\utils\MessageHandler.cs" />
         <Compile Include="networking\utils\NetworkConverter.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
         <Compile Include="server\ClientHandler.cs" />
         <Compile Include="server\handlers\CustomMessageParser.cs" />
-        <Compile Include="server\handlers\DefaultMessageParser.cs" />
-        <Compile Include="server\handlers\MessageHandler.cs" />
         <Compile Include="server\Server.cs" />
         <Compile Include="server\utils\ServerSettings.cs" />
         <Compile Include="utils\Consts.cs" />

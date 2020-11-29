@@ -5,7 +5,7 @@ using UnityEngine.Events;
 namespace RtsNetworkingLibrary.server.handlers
 {
     [Serializable]
-    public class CustomMessageParser : UnityEvent<InboundMessage>
+    public class CustomMessageParser : UnityEvent<NetworkMessage>
     {
     }
 }

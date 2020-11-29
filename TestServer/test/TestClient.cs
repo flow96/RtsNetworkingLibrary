@@ -44,12 +44,12 @@ namespace TestServer.test
             client.Connect(ipEndPoint);
             _logger.Debug("Connected: " + client.Connected);
 
-            BuildMessage buildMessage = new BuildMessage("Flo", 1, "test", new Vector(),new Vector());
+            BuildMessage buildMessage = new BuildMessage("test", new Vector(),new Vector());
             sendMessage(buildMessage);
             
-            ConnectMessage connectMessage = new ConnectMessage(System.Environment.UserName.ToString(), 0);
+            ConnectMessage connectMessage = new ConnectMessage();
             
-            sendMessage(new DisconnectMessage(System.Environment.UserName.ToString(), -1));
+            sendMessage(new DisconnectMessage());
             
             Thread.Sleep(2000);
             //client.Close();

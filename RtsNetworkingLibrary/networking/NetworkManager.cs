@@ -1,5 +1,7 @@
 ﻿using System;
 using RtsNetworkingLibrary.client;
+using RtsNetworkingLibrary.networking.messages.@base;
+using RtsNetworkingLibrary.networking.utils;
 using RtsNetworkingLibrary.server;
 using RtsNetworkingLibrary.server.handlers;
 using RtsNetworkingLibrary.server.utils;
@@ -19,6 +21,7 @@ namespace RtsNetworkingLibrary.networking
         private Logger _logger;
         private MessageHandler _messageHandler;
         public int ClientId { get; private set; }    // Todo set the client id after ClientConnect
+        public string Username { get; set; }
         
         /*
          * Indicates if the local instance of this NetworkManager is the hosting server
@@ -29,6 +32,7 @@ namespace RtsNetworkingLibrary.networking
         public NetworkManager()
         {
             _logger = new Logger(this.GetType().Name);
+            Username = Environment.UserName;
         }
 
         private void Awake()
@@ -71,5 +75,26 @@ namespace RtsNetworkingLibrary.networking
             get => _server;
         }
 
+        /**
+         * Sends a message to the Server
+         */
+        public void TcpSendToServer(NetworkMessage networkMessage)
+        {
+            networkMessage.userId = this.ClientId;
+            networkMessage.username = this.Username;
+            // TODO Send message to server
+        }
+
+        /**
+         * Lets the server send a broadcast to all connected clients
+         */
+        public void TcpServerSendBroadcast(NetworkMessage networkMessage)
+        {
+            if(!IsServer)
+                throw new Exception("Only the server is allowed to send broadcast messages!");
+            _server.TcpBroadcast(NetworkConverter.Serialize(networkMessage));
+        }
+
+        
     }
 }
