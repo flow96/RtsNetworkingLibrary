@@ -20,13 +20,14 @@ namespace RtsNetworkingLibrary.networking.utils
         public List<CustomMessageParser> customServerMessageParser = new List<CustomMessageParser>();
         public List<CustomMessageParser> customClientMessageParser = new List<CustomMessageParser>();
         
-        private RtsNetworkingLibrary.utils.Logger _logger;
+        private readonly RtsNetworkingLibrary.utils.Logger _logger;
         
         private readonly ConcurrentQueue<NetworkMessage> _inboundServerMessages = new ConcurrentQueue<NetworkMessage>();
         private readonly ConcurrentQueue<NetworkMessage> _inboundClientMessages = new ConcurrentQueue<NetworkMessage>();
         private BaseMessageParser _defaultServerMessageParser;
         private BaseMessageParser _defaultClientMessageParser;
         private ServerSettings _settings;
+        private NetworkManager _networkManager;
 
         MessageHandler()
         {
@@ -41,14 +42,22 @@ namespace RtsNetworkingLibrary.networking.utils
 
         private void Start()
         {
+            this._networkManager = GetComponent<NetworkManager>();
             this._settings = GetComponent<ServerSettings>();
         }
 
+        /**
+         * Adds a message to the list, that has been sent by a client and should be processed by the server
+         */
         public void AddServerMessage(NetworkMessage message)
         {
-            _inboundServerMessages.Enqueue(message);
+            if(_networkManager.IsServer)
+                _inboundServerMessages.Enqueue(message);
         }
 
+        /**
+         * Adds a message to the list, that has been sent by the server and should be processed by the client
+         */
         public void AddClientMessage(NetworkMessage message)
         {
             _inboundClientMessages.Enqueue(message);
@@ -56,7 +65,7 @@ namespace RtsNetworkingLibrary.networking.utils
 
         private void Update()
         {
-            byte handledMessages = 0; // Handling max < 255 messages per frame
+            int handledMessages = 0;
             // Handle Server messages
             while (!_inboundServerMessages.IsEmpty && handledMessages++ < _settings.maxHandledMessagesPerFrame)
             {
@@ -72,6 +81,7 @@ namespace RtsNetworkingLibrary.networking.utils
                 }
             }
             handledMessages = 0;
+            // Handle Client messages
             while (!_inboundClientMessages.IsEmpty && handledMessages++ < _settings.maxHandledMessagesPerFrame)
             {
                 NetworkMessage message;

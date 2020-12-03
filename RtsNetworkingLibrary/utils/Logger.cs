@@ -24,7 +24,7 @@ namespace RtsNetworkingLibrary.utils
 
         private string GetFormattedMessage(object msg)
         {
-            return DateTime.Now.Millisecond + " >> " + prefix + ": " + msg;
+            return DateTime.Now + " [" + prefix + "] >> " + msg;
         }
 
     }

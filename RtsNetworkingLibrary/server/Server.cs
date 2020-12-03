@@ -54,21 +54,25 @@ namespace RtsNetworkingLibrary.server
             clients[clientId] = null;
         }
 
+        public void RemoveClient(int clientId)
+        {
+            clients[clientId] = null;
+        }
+
         public void StopServer()
         {
             if (_server != null && ServerRunning)
             {
                 foreach (ClientHandler client in clients)
                 {
-                    if(client == null)
-                        continue;
-                    client.Disconnect("Disconnecting client, due to server stopping");
+                    client?.Disconnect("Disconnecting client, due to server stopping");
                 }
                 _server.Stop();
                 _server.Server.Dispose();
             }
             ServerRunning = false;
             clientCounter = 0;
+            _logger.Debug("Server stopped");
         }
 
         private void AcceptTcpClients(IAsyncResult ar)
@@ -76,12 +80,12 @@ namespace RtsNetworkingLibrary.server
             TcpClient client = _server.EndAcceptTcpClient(ar);
             clients[clientCounter] = new ClientHandler(client, this, _serverSettings, _messageHandler, clientCounter);
             clientCounter++;
-            _logger.Debug(" >> Server: New Client connected");
+            _logger.Debug("New Client connected");
             if(clientCounter < _serverSettings.maxPlayers)
                 _server.BeginAcceptTcpClient(AcceptTcpClients, null);
         }
 
-        public void TcpBroadcast(RawDataMessage message)
+        public void TcpBroadcast(NetworkMessage message)
         {
             if (!ServerRunning)
             {

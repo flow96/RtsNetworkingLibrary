@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Net;
+using System.Net.Sockets;
 using RtsNetworkingLibrary.client;
 using RtsNetworkingLibrary.networking.messages.@base;
 using RtsNetworkingLibrary.networking.utils;
 using RtsNetworkingLibrary.server;
-using RtsNetworkingLibrary.server.handlers;
 using RtsNetworkingLibrary.server.utils;
 using RtsNetworkingLibrary.utils;
 using UnityEngine;
@@ -29,6 +30,11 @@ namespace RtsNetworkingLibrary.networking
          */
         public bool IsServer { get; private set; } = false;
 
+        
+        public ServerSettings ServerSettings => _serverSettings;
+
+        public MessageHandler MessageHandler => _messageHandler;
+
         public NetworkManager()
         {
             _logger = new Logger(this.GetType().Name);
@@ -45,10 +51,9 @@ namespace RtsNetworkingLibrary.networking
             // Set logging to Unity logging, since this class is used in unity projects only
             Logger.LoggerType = LoggerType.UNITY;
             _server = new Server();
-            _client = new Client();
+            _client = new Client(this);
         }
 
-        public ServerSettings ServerSettings => _serverSettings;
 
         private void OnApplicationQuit()
         {
@@ -62,6 +67,15 @@ namespace RtsNetworkingLibrary.networking
         {
             _server.StartServer(this._serverSettings, this._messageHandler);
             IsServer = true;
+            IPAddress address = Array.FindLast(
+                Dns.GetHostEntry(string.Empty).AddressList,
+                a => a.AddressFamily == AddressFamily.InterNetwork);
+            IPEndPoint endPoint = new IPEndPoint(address, _serverSettings.port);
+            if (address == null)
+            {
+                throw new Exception("Could not start the server, because your local IP could not be fetched (therefore the local client can't connect)");
+            }
+            ConnectToServer(endPoint);
         }
 
         public void StopServer()
@@ -70,6 +84,11 @@ namespace RtsNetworkingLibrary.networking
             IsServer = false;
         }
 
+        public void ConnectToServer(IPEndPoint endPoint)
+        {
+            _client.Connect(endPoint);
+        }
+        
         public Server Server
         {
             get => _server;
@@ -80,7 +99,7 @@ namespace RtsNetworkingLibrary.networking
          */
         public void TcpSendToServer(NetworkMessage networkMessage)
         {
-            networkMessage.userId = this.ClientId;
+            networkMessage.userId = this._client.ClientId;
             networkMessage.username = this.Username;
             // TODO Send message to server
         }
@@ -92,7 +111,7 @@ namespace RtsNetworkingLibrary.networking
         {
             if(!IsServer)
                 throw new Exception("Only the server is allowed to send broadcast messages!");
-            _server.TcpBroadcast(NetworkConverter.Serialize(networkMessage));
+            _server.TcpBroadcast(networkMessage);
         }
 
         

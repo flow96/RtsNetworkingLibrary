@@ -42,6 +42,7 @@
     <ItemGroup>
         <Compile Include="client\Client.cs" />
         <Compile Include="client\handlers\DefaultClientMessageParser.cs" />
+        <Compile Include="networking\entities\NetworkMonoBehaviour.cs" />
         <Compile Include="networking\messages\base\InboundMessage.cs" />
         <Compile Include="networking\messages\base\NetworkMessage.cs" />
         <Compile Include="networking\messages\base\RawDataMessage.cs" />

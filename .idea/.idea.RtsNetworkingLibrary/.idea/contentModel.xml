@@ -15,6 +15,9 @@
           </e>
         </e>
         <e p="networking" t="Include">
+          <e p="entities" t="Include">
+            <e p="NetworkMonoBehaviour.cs" t="Include" />
+          </e>
           <e p="messages" t="Include">
             <e p="base" t="Include">
               <e p="InboundMessage.cs" t="Include" />

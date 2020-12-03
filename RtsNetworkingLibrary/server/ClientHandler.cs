@@ -1,6 +1,7 @@
 using System;
 using System.Net.Sockets;
 using RtsNetworkingLibrary.networking.messages.@base;
+using RtsNetworkingLibrary.networking.messages.connection;
 using RtsNetworkingLibrary.networking.utils;
 using RtsNetworkingLibrary.server.handlers;
 using RtsNetworkingLibrary.server.utils;
@@ -13,8 +14,8 @@ namespace RtsNetworkingLibrary.server
 
         private readonly Logger _logger;
         
-        public readonly TcpClient _client;
-        public readonly Server _server;
+        private readonly TcpClient _client;
+        private readonly Server _server;
         private readonly ServerSettings _serverSettings;
         private readonly MessageHandler _messageHandler;
         private readonly NetworkStream _networkStream;
@@ -37,8 +38,12 @@ namespace RtsNetworkingLibrary.server
             this._serverSettings = serverSettings;
             this._messageHandler = messageHandler;
             this._userid = userid;
-            this._headerBuffer = new byte[_serverSettings.headerBufferByteSze];
+            this._headerBuffer = new byte[_serverSettings.headerBufferByteSize];
             
+            ConnectMessage connectMessage = new ConnectMessage();
+            connectMessage.userId = userid;
+            
+            SendTcpMessage(connectMessage);
             _networkStream.BeginRead(_headerBuffer, 0, _headerBuffer.Length, ReadHeader, null);
         }
 
@@ -51,7 +56,7 @@ namespace RtsNetworkingLibrary.server
                 return;
             }
             _headerReadDelta += read;
-            if (_headerReadDelta == _serverSettings.headerBufferByteSze) // Header complete
+            if (_headerReadDelta == _serverSettings.headerBufferByteSize) // Header complete
             {
                 // Parse the data length and start reading
                 _messageLength = BitConverter.ToInt32(_headerBuffer, 0);
@@ -60,9 +65,9 @@ namespace RtsNetworkingLibrary.server
             }
             else // Header fully reseived
             {
-                _logger.Debug("Parts of the header missing (" + _headerReadDelta + "/" + _serverSettings.headerBufferByteSze + ")");
+                _logger.Debug("Parts of the header missing (" + _headerReadDelta + "/" + _serverSettings.headerBufferByteSize + ")");
                 _networkStream.BeginRead(_headerBuffer, _headerReadDelta,
-                    _serverSettings.headerBufferByteSze - _headerReadDelta, ReadHeader, null);
+                    _serverSettings.headerBufferByteSize - _headerReadDelta, ReadHeader, null);
             }
         }
 
@@ -104,12 +109,14 @@ namespace RtsNetworkingLibrary.server
         public void Disconnect(string message = "Client disconnected!")
         {
             _logger.Debug(message);
+            _server.RemoveClient(_userid);
             _client.Close();
             _client.Dispose();
         }
 
-        public void SendTcpMessage(RawDataMessage message)
+        public void SendTcpMessage(NetworkMessage networkMessage)
         {
+            RawDataMessage message = NetworkConverter.Serialize(networkMessage);
             byte[] header = BitConverter.GetBytes(message.data.Length);
             _client.GetStream().Write(header, 0, header.Length);
             _client.GetStream().Write(message.data, 0, message.data.Length);
