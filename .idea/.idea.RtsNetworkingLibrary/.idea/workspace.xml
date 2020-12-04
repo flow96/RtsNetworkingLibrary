@@ -67,17 +67,14 @@
         <option value="$PROJECT_DIR$/RtsNetworkingLibrary/networking/messages/entities/NetworkEntity.cs" />
         <option value="$PROJECT_DIR$/RtsNetworkingLibrary/networking/messages/base/RawDataMessage.cs" />
         <option value="$PROJECT_DIR$/RtsNetworkingLibrary/server/handlers/Test.cs" />
-        <option value="$PROJECT_DIR$/RtsNetworkingLibrary/networking/utils/NetworkConverter.cs" />
         <option value="$PROJECT_DIR$/RtsNetworkingLibrary/server/handlers/DefaultMessageHandler.cs" />
         <option value="$PROJECT_DIR$/RtsNetworkingLibrary/utils/Vector.cs" />
         <option value="$PROJECT_DIR$/RtsNetworkingLibrary/utils/Consts.cs" />
-        <option value="$PROJECT_DIR$/RtsNetworkingLibrary/networking/messages/connection/ConnectMessage.cs" />
         <option value="$PROJECT_DIR$/RtsNetworkingLibrary/networking/messages/connection/DisconnectMessage.cs" />
         <option value="$PROJECT_DIR$/RtsNetworkingLibrary/networking/messages/entities/BuildMessage.cs" />
         <option value="$PROJECT_DIR$/RtsNetworkingLibrary/networking/messages/entities/DestroyMessage.cs" />
         <option value="$PROJECT_DIR$/RtsNetworkingLibrary/networking/messages/base/InboundMessage.cs" />
         <option value="$PROJECT_DIR$/RtsNetworkingLibrary/server/handlers/DefaultMessageParser.cs" />
-        <option value="$PROJECT_DIR$/TestServer/test/TestClient.cs" />
         <option value="$PROJECT_DIR$/RtsNetworkingLibrary/server/handlers/MessageHandler.cs" />
         <option value="$PROJECT_DIR$/RtsNetworkingLibrary/server/handlers/CustomMessageParser.cs" />
         <option value="$PROJECT_DIR$/RtsNetworkingLibrary/server/handlers/DefaultServerMessageParser.cs" />
@@ -91,10 +88,13 @@
         <option value="$PROJECT_DIR$/TestServer/test/TestServer.cs" />
         <option value="$PROJECT_DIR$/RtsNetworkingLibrary/client/handlers/DefaultClientMessageParser.cs" />
         <option value="$PROJECT_DIR$/RtsNetworkingLibrary/utils/Logger.cs" />
-        <option value="$PROJECT_DIR$/RtsNetworkingLibrary/networking/NetworkManager.cs" />
-        <option value="$PROJECT_DIR$/RtsNetworkingLibrary/server/Server.cs" />
+        <option value="$PROJECT_DIR$/RtsNetworkingLibrary/networking/utils/NetworkConverter.cs" />
         <option value="$PROJECT_DIR$/RtsNetworkingLibrary/server/ClientHandler.cs" />
+        <option value="$PROJECT_DIR$/RtsNetworkingLibrary/server/Server.cs" />
+        <option value="$PROJECT_DIR$/RtsNetworkingLibrary/networking/messages/connection/ConnectMessage.cs" />
         <option value="$PROJECT_DIR$/RtsNetworkingLibrary/client/Client.cs" />
+        <option value="$PROJECT_DIR$/TestServer/test/TestClient.cs" />
+        <option value="$PROJECT_DIR$/RtsNetworkingLibrary/networking/NetworkManager.cs" />
       </list>
     </option>
   </component>
@@ -169,7 +169,8 @@
       <workItem from="1606319091631" duration="3317000" />
       <workItem from="1606401959894" duration="8075000" />
       <workItem from="1607005209003" duration="4011000" />
-      <workItem from="1607009299545" duration="4082000" />
+      <workItem from="1607009299545" duration="4388000" />
+      <workItem from="1607082677207" duration="2523000" />
     </task>
     <servers />
   </component>
@@ -187,22 +188,22 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="414" y="175" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1605109522894" />
-    <state width="1877" height="223" key="GridCell.Tab.0.bottom" timestamp="1606322674027">
+    <state width="1877" height="223" key="GridCell.Tab.0.bottom" timestamp="1607085173905">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="223" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1606322674027" />
-    <state width="1877" height="223" key="GridCell.Tab.0.center" timestamp="1606322674027">
+    <state width="1877" height="223" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1607085173905" />
+    <state width="1877" height="223" key="GridCell.Tab.0.center" timestamp="1607085173905">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="223" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1606322674027" />
-    <state width="1877" height="223" key="GridCell.Tab.0.left" timestamp="1606322674027">
+    <state width="1877" height="223" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1607085173905" />
+    <state width="1877" height="223" key="GridCell.Tab.0.left" timestamp="1607085173904">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="223" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1606322674027" />
-    <state width="1877" height="223" key="GridCell.Tab.0.right" timestamp="1606322674027">
+    <state width="1877" height="223" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1607085173904" />
+    <state width="1877" height="223" key="GridCell.Tab.0.right" timestamp="1607085173905">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="223" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1606322674027" />
+    <state width="1877" height="223" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1607085173905" />
     <state width="1877" height="375" key="GridCell.Tab.1.bottom" timestamp="1604935719237">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -267,9 +268,9 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="862" y="256" width="650" height="534" key="find.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1607012147196" />
-    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup" timestamp="1607009928866">
+    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup" timestamp="1607084800913">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1607009928866" />
+    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1607084800913" />
   </component>
 </project>

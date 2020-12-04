@@ -6,8 +6,9 @@ namespace RtsNetworkingLibrary.networking.messages.connection
     [Serializable]
     public class ConnectMessage : NetworkMessage
     {
-        public ConnectMessage()
+        public ConnectMessage(string username = "")
         {
+            this.username = username;
         }
     }
 }

@@ -42,6 +42,7 @@ namespace RtsNetworkingLibrary.client
                 {
                     _tcpClient.Connect(endPoint);
                     _stream = _tcpClient.GetStream();
+                    SendToServer(new ConnectMessage(Environment.UserName));
                     ReadHandshake();
                 }
                 catch (Exception e)
@@ -56,30 +57,30 @@ namespace RtsNetworkingLibrary.client
         
         public void Disconnect(string message = "Closing connection to server")
         {
-            _logger.Debug(message);
-            if(_tcpClient.Connected)
-                _tcpClient.Close();
+            if (_tcpClient.Connected)
+            {
+                _logger.Debug(message);
+                if(_tcpClient.Connected)
+                    _tcpClient.Close();    
+            }
         }
 
 
         private void ReadHandshake()
         {
-            
-            byte[] connectMsg = new byte[4];
-            int headerLength = 0;
-            int msgDataLength = 0, msgReadLength = 0;
+            byte[] dataBuffer = new byte[4];
+            int headerLength = 0, msgDataLength = 0, msgReadLength = 0;
             do
             {
-                headerLength += _stream.Read(connectMsg, 0, _networkManager.ServerSettings.headerBufferByteSize - headerLength);    
+                headerLength += _stream.Read(dataBuffer, 0, _networkManager.ServerSettings.headerBufferByteSize - headerLength);    
             } while (headerLength < 4);
-            msgDataLength = BitConverter.ToInt32(connectMsg, 0);
-            connectMsg = new byte[msgDataLength];
+            msgDataLength = BitConverter.ToInt32(dataBuffer, 0);
+            dataBuffer = new byte[msgDataLength];
             do
             {
-                msgReadLength += _stream.Read(connectMsg, 0, msgDataLength - msgReadLength);
+                msgReadLength += _stream.Read(dataBuffer, 0, msgDataLength - msgReadLength);
             } while (msgReadLength < msgDataLength);
-            RawDataMessage rawDataMessage = new RawDataMessage(connectMsg);
-            NetworkMessage msg = NetworkConverter.Deserialize(rawDataMessage);
+            NetworkMessage msg = NetworkConverter.Deserialize(dataBuffer);
             if (msg is ConnectMessage)
             {
                 ConnectMessage connectMessage = (ConnectMessage) msg;
@@ -130,8 +131,7 @@ namespace RtsNetworkingLibrary.client
             if (_dataReadDelta == _dataBuffer.Length)
             {
                 // Message fully received
-                RawDataMessage rawDataMessage = new RawDataMessage(_dataBuffer);
-                NetworkMessage msg = NetworkConverter.Deserialize(rawDataMessage);
+                NetworkMessage msg = NetworkConverter.Deserialize(_dataBuffer);
                 _networkManager.MessageHandler.AddClientMessage(msg);
                 ResetAndWaitForNext();
             }
@@ -154,10 +154,10 @@ namespace RtsNetworkingLibrary.client
 
         public void SendToServer(NetworkMessage networkMessage)
         {
-            RawDataMessage rMessage = NetworkConverter.Serialize(networkMessage);
-            byte[] header = BitConverter.GetBytes(rMessage.data.Length);
+            byte[] data = NetworkConverter.Serialize(networkMessage);
+            byte[] header = BitConverter.GetBytes(data.Length);
             _stream.Write(header, 0, header.Length);
-            _stream.Write(rMessage.data, 0, rMessage.data.Length);
+            _stream.Write(data, 0, data.Length);
         }
     }
 }

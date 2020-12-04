@@ -83,8 +83,7 @@ namespace RtsNetworkingLibrary.server
             if (_dataReadDelta == _dataBuffer.Length)
             {
                 // Message fully received
-                RawDataMessage rawDataMessage = new RawDataMessage(_dataBuffer);
-                NetworkMessage msg = NetworkConverter.Deserialize(rawDataMessage);
+                NetworkMessage msg = NetworkConverter.Deserialize(_dataBuffer);
                 _messageHandler.AddServerMessage(msg);
                 ResetAndWaitForNext();
             }
@@ -114,12 +113,13 @@ namespace RtsNetworkingLibrary.server
             _client.Dispose();
         }
 
+        
         public void SendTcpMessage(NetworkMessage networkMessage)
         {
-            RawDataMessage message = NetworkConverter.Serialize(networkMessage);
-            byte[] header = BitConverter.GetBytes(message.data.Length);
+            byte[] data = NetworkConverter.Serialize(networkMessage);
+            byte[] header = BitConverter.GetBytes(data.Length);
             _client.GetStream().Write(header, 0, header.Length);
-            _client.GetStream().Write(message.data, 0, message.data.Length);
+            _client.GetStream().Write(data, 0, data.Length);
         }
     }
 }

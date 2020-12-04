@@ -58,8 +58,8 @@ namespace RtsNetworkingLibrary.networking
         private void OnApplicationQuit()
         {
             // Close all connections
-            _server.StopServer();
-            _client.Disconnect();
+            _server?.StopServer();
+            _client?.Disconnect();
         }
 
 
