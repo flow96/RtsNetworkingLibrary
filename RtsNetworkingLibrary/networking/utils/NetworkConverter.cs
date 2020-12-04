@@ -7,7 +7,7 @@ namespace RtsNetworkingLibrary.networking.utils
     public static class NetworkConverter
     {
         /**
-         * Converts a NetworkMessage into a RawDataMessage (byte-array)
+         * Converts a NetworkMessage into a Byte-Array (data)
          * so the message can be sent over the network
          */
         public static byte[] Serialize(NetworkMessage networkMessage) {
@@ -18,7 +18,7 @@ namespace RtsNetworkingLibrary.networking.utils
         }
 
         /**
-         * Converts a received RawDataMessage into a basic NetworkMessage
+         * Converts received Byte-Data into a basic NetworkMessage
          */
         public static NetworkMessage Deserialize(byte[] data) {
             using (var memoryStream = new MemoryStream(data))

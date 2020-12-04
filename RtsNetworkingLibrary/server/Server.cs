@@ -4,7 +4,6 @@ using System.Net.Sockets;
 using RtsNetworkingLibrary.networking.messages.@base;
 using RtsNetworkingLibrary.networking.messages.connection;
 using RtsNetworkingLibrary.networking.utils;
-using RtsNetworkingLibrary.server.handlers;
 using RtsNetworkingLibrary.server.utils;
 using RtsNetworkingLibrary.utils;
 
@@ -24,6 +23,8 @@ namespace RtsNetworkingLibrary.server
         private ServerSettings _serverSettings;
         private MessageHandler _messageHandler;
 
+        // TODO reduce client id on client-disconnect
+        
         public Server()
         {
             _logger = new Logger(this.GetType().Name);
@@ -78,15 +79,14 @@ namespace RtsNetworkingLibrary.server
         private void AcceptTcpClients(IAsyncResult ar)
         {
             TcpClient client = _server.EndAcceptTcpClient(ar);
-            NetworkMessage message = ReceiveSingleMessage(client);
+            NetworkMessage message = NetworkHelper.ReceiveSingleMessage(client);
             if (message is ConnectMessage)
             {
-                ConnectMessage connectMessage = (ConnectMessage) message;
-                connectMessage.userId = clientCounter;
-                SendSingleMessage(client, connectMessage);
+                message.userId = clientCounter;
+                NetworkHelper.SendSingleMessage(client, message, clientCounter);
                 clients[clientCounter] = new ClientHandler(client, this, _serverSettings, _messageHandler, clientCounter);
                 clientCounter++;
-                _logger.Debug("New Client connected: " + connectMessage.userId + " = " + connectMessage.username);
+                _logger.Debug("New Client connected: " + message.userId + " = " + message.username);
             }
             else
             {
@@ -97,30 +97,6 @@ namespace RtsNetworkingLibrary.server
                 _server.BeginAcceptTcpClient(AcceptTcpClients, null);
         }
 
-        private NetworkMessage ReceiveSingleMessage(TcpClient client)
-        {
-            byte[] dataBuffer = new byte[4];
-            int headerLength = 0, msgDataLength = 0, msgReadLength = 0;
-            do
-            {
-                headerLength += client.GetStream().Read(dataBuffer, 0, 4 - headerLength);    
-            } while (headerLength < 4);
-            msgDataLength = BitConverter.ToInt32(dataBuffer, 0);
-            dataBuffer = new byte[msgDataLength];
-            do
-            {
-                msgReadLength += client.GetStream().Read(dataBuffer, 0, msgDataLength - msgReadLength);
-            } while (msgReadLength < msgDataLength);
-            return (NetworkConverter.Deserialize(dataBuffer));
-        }
-
-        private void SendSingleMessage(TcpClient client, NetworkMessage message)
-        {
-            byte[] data = NetworkConverter.Serialize(message);
-            byte[] header = BitConverter.GetBytes(data.Length);
-            client.GetStream().Write(header, 0, header.Length);
-            client.GetStream().Write(data, 0, data.Length);
-        }
 
 
         public void TcpBroadcast(NetworkMessage message)

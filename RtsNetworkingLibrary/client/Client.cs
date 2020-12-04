@@ -11,12 +11,12 @@ namespace RtsNetworkingLibrary.client
 {
     public class Client
     {
-        private TcpClient _tcpClient;
+        private readonly TcpClient _tcpClient;
         private readonly NetworkManager _networkManager;
         private readonly Logger _logger;
         private NetworkStream _stream;
 
-        private byte[] _headerBuffer;
+        private readonly byte[] _headerBuffer;
         private byte[] _dataBuffer;
         
         private int _headerReadDelta;
@@ -42,7 +42,7 @@ namespace RtsNetworkingLibrary.client
                 {
                     _tcpClient.Connect(endPoint);
                     _stream = _tcpClient.GetStream();
-                    SendToServer(new ConnectMessage(Environment.UserName));
+                    NetworkHelper.SendSingleMessage(_tcpClient, new ConnectMessage(Environment.UserName), -1);
                     ReadHandshake();
                 }
                 catch (Exception e)
@@ -152,12 +152,11 @@ namespace RtsNetworkingLibrary.client
             _stream.BeginRead(_headerBuffer, 0, _headerBuffer.Length, ReadHeader, null);
         }
 
-        public void SendToServer(NetworkMessage networkMessage)
+        public void SendToServer(NetworkMessage message)
         {
-            byte[] data = NetworkConverter.Serialize(networkMessage);
-            byte[] header = BitConverter.GetBytes(data.Length);
-            _stream.Write(header, 0, header.Length);
-            _stream.Write(data, 0, data.Length);
+            if(!_tcpClient.Connected)
+                throw new Exception("Client is not connected! Can't send a message to the server!");
+            NetworkHelper.SendSingleMessage(_tcpClient, message, ClientId);
         }
     }
 }

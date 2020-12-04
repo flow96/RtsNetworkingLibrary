@@ -21,7 +21,6 @@ namespace RtsNetworkingLibrary.networking
         private ServerSettings _serverSettings;
         private Logger _logger;
         private MessageHandler _messageHandler;
-        public int ClientId { get; private set; }    // Todo set the client id after ClientConnect
         public string Username { get; set; }
         
         /*
@@ -30,6 +29,7 @@ namespace RtsNetworkingLibrary.networking
          */
         public bool IsServer { get; private set; } = false;
 
+        public int ClientId => _client.ClientId;
         
         public ServerSettings ServerSettings => _serverSettings;
 
@@ -101,7 +101,7 @@ namespace RtsNetworkingLibrary.networking
         {
             networkMessage.userId = this._client.ClientId;
             networkMessage.username = this.Username;
-            // TODO Send message to server
+            _client.SendToServer(networkMessage);
         }
 
         /**

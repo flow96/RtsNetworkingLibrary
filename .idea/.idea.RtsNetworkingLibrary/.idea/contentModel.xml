@@ -15,14 +15,10 @@
           </e>
         </e>
         <e p="networking" t="Include">
-          <e p="entities" t="Include">
-            <e p="NetworkMonoBehaviour.cs" t="Include" />
-          </e>
           <e p="messages" t="Include">
             <e p="base" t="Include">
               <e p="InboundMessage.cs" t="Include" />
               <e p="NetworkMessage.cs" t="Include" />
-              <e p="RawDataMessage.cs" t="Include" />
             </e>
             <e p="connection" t="Include">
               <e p="ConnectMessage.cs" t="Include" />
@@ -36,11 +32,11 @@
           <e p="NetworkManager.cs" t="Include" />
           <e p="parser" t="Include">
             <e p="BaseMessageParser.cs" t="Include" />
-            <e p="DefaultServerMessageParser.cs" t="Include" />
           </e>
           <e p="utils" t="Include">
             <e p="MessageHandler.cs" t="Include" />
             <e p="NetworkConverter.cs" t="Include" />
+            <e p="NetworkHelper.cs" t="Include" />
           </e>
         </e>
         <e p="obj" t="ExcludeRecursive" />
@@ -52,11 +48,21 @@
           <e p="ClientHandler.cs" t="Include" />
           <e p="handlers" t="Include">
             <e p="CustomMessageParser.cs" t="Include" />
+            <e p="DefaultServerMessageParser.cs" t="Include" />
           </e>
           <e p="Server.cs" t="Include" />
           <e p="utils" t="Include">
             <e p="ServerSettings.cs" t="Include" />
           </e>
+        </e>
+        <e p="unity" t="Include">
+          <e p="attributes" t="Include">
+            <e p="SyncVar.cs" t="Include" />
+          </e>
+          <e p="base" t="Include">
+            <e p="NetworkMonoBehaviour.cs" t="Include" />
+          </e>
+          <e p="DefaultNetworkMonoBehaviour.cs" t="Include" />
         </e>
         <e p="utils" t="Include">
           <e p="Consts.cs" t="Include" />

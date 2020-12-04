@@ -2,7 +2,6 @@ using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
-using RtsNetworkingLibrary.client;
 using RtsNetworkingLibrary.networking.messages.@base;
 using RtsNetworkingLibrary.networking.messages.connection;
 using RtsNetworkingLibrary.networking.messages.entities;
@@ -21,6 +20,7 @@ namespace TestServer.test
         private static int port = 4045;
 
         private TcpClient client;
+        private int clientId = 0;
         
         static void Main(string[] args)
         {
@@ -46,11 +46,12 @@ namespace TestServer.test
             client.Connect(ipEndPoint);
             _logger.Debug("Connected: " + client.Connected);
 
-            ConnectMessage connectMessage = new ConnectMessage(Environment.UserName);
-            
-            sendMessage(connectMessage);
+            sendMessage(new ConnectMessage(Environment.UserName));
             ConnectMessage msg = (ConnectMessage)ReceiveSingleMessage(client);
-            _logger.Debug(msg.userId);
+            this.clientId = msg.userId;
+            
+            BuildMessage buildMessage = new BuildMessage("test", new Vector(), new Vector());
+            sendMessage(buildMessage);
             
             Thread.Sleep(2000);
             //client.Close();
@@ -76,6 +77,7 @@ namespace TestServer.test
 
         private void sendMessage(NetworkMessage networkMessage)
         {
+            networkMessage.userId = this.clientId;
             byte[] data = NetworkConverter.Serialize(networkMessage);
             byte[] header = BitConverter.GetBytes(data.Length);
             client.GetStream().Write(header, 0, header.Length);

@@ -1,13 +1,16 @@
+using RtsNetworkingLibrary.networking;
 using RtsNetworkingLibrary.networking.messages.connection;
 using RtsNetworkingLibrary.networking.messages.entities;
+using RtsNetworkingLibrary.networking.parser;
 using Logger = RtsNetworkingLibrary.utils.Logger;
 
-namespace RtsNetworkingLibrary.networking.parser
+namespace RtsNetworkingLibrary.server.handlers
 {
     public class DefaultServerMessageParser : BaseMessageParser
     {
         private Logger _logger;
         private NetworkManager _networkManager;
+        private static ulong _entityCounter = 1;
 
         public DefaultServerMessageParser()
         {
@@ -23,6 +26,7 @@ namespace RtsNetworkingLibrary.networking.parser
         protected override void HandleBuildMessage(BuildMessage buildMessage)
         {
            _logger.Debug("Server received handle build message");
+           buildMessage.entityId = _entityCounter++;
            _networkManager.TcpServerSendBroadcast(buildMessage);
         }
 

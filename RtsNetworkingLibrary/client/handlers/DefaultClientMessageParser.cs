@@ -3,6 +3,7 @@ using RtsNetworkingLibrary.networking;
 using RtsNetworkingLibrary.networking.messages.connection;
 using RtsNetworkingLibrary.networking.messages.entities;
 using RtsNetworkingLibrary.networking.parser;
+using RtsNetworkingLibrary.unity.@base;
 using RtsNetworkingLibrary.utils;
 using UnityEngine;
 
@@ -32,9 +33,18 @@ namespace RtsNetworkingLibrary.client.handlers
                 throw new Exception("Could not find Prefab with name: " + buildMessage.prefabName);
             else
             {
-                Instantiate(toBeSpawned,
+                GameObject spawnedObject = Instantiate(toBeSpawned,
                     new Vector3(buildMessage.position.x, buildMessage.position.y, buildMessage.position.z),
                     Quaternion.Euler(buildMessage.rotation.x, buildMessage.rotation.y, buildMessage.rotation.z));
+                
+                NetworkMonoBehaviour networkMonoBehaviour;
+                if (spawnedObject.TryGetComponent(out networkMonoBehaviour))
+                {
+                    spawnedObject.name = "network_object_" + buildMessage.entityId;
+                    networkMonoBehaviour.clientId = buildMessage.userId;
+                    networkMonoBehaviour.entityId = buildMessage.entityId;
+                }
+                
             }
         }
 
