@@ -48,7 +48,7 @@ namespace TestServer.test
 
             sendMessage(new ConnectMessage(Environment.UserName));
             ConnectMessage msg = (ConnectMessage)ReceiveSingleMessage(client);
-            this.clientId = msg.userId;
+            this.clientId = msg.playerInfo.userId;
             
             BuildMessage buildMessage = new BuildMessage("test", new Vector(), new Vector());
             sendMessage(buildMessage);
@@ -77,7 +77,7 @@ namespace TestServer.test
 
         private void sendMessage(NetworkMessage networkMessage)
         {
-            networkMessage.userId = this.clientId;
+            networkMessage.playerInfo.userId = this.clientId;
             byte[] data = NetworkConverter.Serialize(networkMessage);
             byte[] header = BitConverter.GetBytes(data.Length);
             client.GetStream().Write(header, 0, header.Length);

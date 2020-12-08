@@ -1,10 +1,12 @@
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using RtsNetworkingLibrary.networking;
 using RtsNetworkingLibrary.networking.messages.@base;
 using RtsNetworkingLibrary.networking.messages.connection;
 using RtsNetworkingLibrary.networking.utils;
+using RtsNetworkingLibrary.unity.callbacks;
 using RtsNetworkingLibrary.utils;
 
 namespace RtsNetworkingLibrary.client
@@ -22,6 +24,9 @@ namespace RtsNetworkingLibrary.client
         private int _headerReadDelta;
         private int _dataReadDelta;
         private int _messageLength;
+
+        private readonly List<IClientListener> _listeners = new List<IClientListener>();
+
 
         public int ClientId { private set; get; } = -1;
 
@@ -47,13 +52,16 @@ namespace RtsNetworkingLibrary.client
                     if (message is ConnectMessage)
                     {
                         ConnectMessage connectMessage = (ConnectMessage) message;
-                        this.ClientId = connectMessage.userId;
+                        this.ClientId = connectMessage.playerInfo.userId;
                         _logger.Debug("Received client id: " + ClientId);
                         _stream.BeginRead(_headerBuffer, 0, _headerBuffer.Length, ReadHeader, null);
+                        // Notify callbacks that we're connected
+                        _listeners.ForEach(listener => listener?.OnConnected());
                     }
                     else
                     {
                         _tcpClient.Close();
+                        _listeners.ForEach(listener => listener?.OnDisconnected());
                         throw new Exception("Client expected ConnectMessage, but received: " + message.GetType());
                     }
                 }
@@ -62,15 +70,17 @@ namespace RtsNetworkingLibrary.client
                     _logger.Debug(e);
                     if(_networkManager.IsServer)
                         _networkManager.StopServer();
+                    _listeners.ForEach(listener => listener?.OnDisconnected());
                     throw new Exception("Could not connect to the server!");
                 }   
             }
         }
-        
+
         public void Disconnect(string message = "Closing connection to server")
         {
             if (_tcpClient.Connected)
             {
+                _listeners.ForEach(listener => listener?.OnDisconnected());
                 _logger.Debug(message);
                 if(_tcpClient.Connected)
                     _tcpClient.Close();    
@@ -140,6 +150,18 @@ namespace RtsNetworkingLibrary.client
             if(!_tcpClient.Connected)
                 throw new Exception("Client is not connected! Can't send a message to the server!");
             NetworkHelper.SendSingleMessage(_tcpClient, message, ClientId);
+        }
+
+        public void AddListener(IClientListener listener)
+        {
+            if (!_listeners.Contains(listener))
+                _listeners.Add(listener);
+        }
+
+        public void RemoveListener(IClientListener listener)
+        {
+            if (_listeners.Contains(listener))
+                _listeners.Remove(listener);
         }
     }
 }

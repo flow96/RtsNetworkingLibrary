@@ -38,14 +38,14 @@ namespace RtsNetworkingLibrary.server.handlers
 
         protected override void HandleTransformUpdateMessage(TransformUpdate transformUpdate)
         {
-            _logger.Debug("Handling Transform Update message" + transformUpdate.entityId + " | " + transformUpdate.position + " | " + transformUpdate.rotation);
-            _networkManager.TcpServerSendBroadcast(transformUpdate, transformUpdate.userId);
+            _logger.Debug("Handling Transform Update message id: " + transformUpdate.entityId + " | position: " + transformUpdate.position + " | rotation: " + transformUpdate.rotation);
+            _networkManager.TcpServerSendBroadcast(transformUpdate, transformUpdate.playerInfo.userId);
         }
 
         protected override void HandleDisconnectMessage(DisconnectMessage disconnectMessage)
         {
-            _logger.Debug("Received disconnect from: " + disconnectMessage.username + " (" + disconnectMessage.userId + ")");
-            _networkManager.Server.DisconnectClient(disconnectMessage.userId);
+            _logger.Debug("Received disconnect from: " + disconnectMessage.playerInfo.username + " (" + disconnectMessage.playerInfo.userId + ")");
+            _networkManager.Server.DisconnectClient(disconnectMessage.playerInfo.userId);
         }
     }
 }

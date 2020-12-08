@@ -1,10 +1,12 @@
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using RtsNetworkingLibrary.networking.messages.@base;
 using RtsNetworkingLibrary.networking.messages.connection;
 using RtsNetworkingLibrary.networking.utils;
 using RtsNetworkingLibrary.server.utils;
+using RtsNetworkingLibrary.unity.callbacks;
 using RtsNetworkingLibrary.utils;
 
 namespace RtsNetworkingLibrary.server
@@ -22,6 +24,8 @@ namespace RtsNetworkingLibrary.server
         private ClientHandler[] clients;
         private ServerSettings _serverSettings;
         private MessageHandler _messageHandler;
+        
+        private readonly List<IServerListener> _listeners = new List<IServerListener>();
 
         // TODO reduce client id on client-disconnect
         
@@ -45,16 +49,21 @@ namespace RtsNetworkingLibrary.server
                 _server.Start(10);
                 _server.BeginAcceptTcpClient(AcceptTcpClients, null);
                 _logger.Debug("Server started");
-                //Debug.Log("Test");
+                _listeners.ForEach(listener => listener?.OnServerStarted());
             }
         }
 
         public void DisconnectClient(int clientId)
         {
+            _listeners.ForEach(listener => listener?.OnClientDisconnected(clients[clientId].playerInfo));
             clients[clientId].Disconnect();
             clients[clientId] = null;
         }
 
+        /**
+         * Removes the client from the list of clientHandlers
+         * The client will no longer be updated
+         */
         public void RemoveClient(int clientId)
         {
             clients[clientId] = null;
@@ -73,6 +82,7 @@ namespace RtsNetworkingLibrary.server
             }
             ServerRunning = false;
             clientCounter = 0;
+            _listeners.ForEach(listener => listener?.OnServerStopped());
             _logger.Debug("Server stopped");
         }
 
@@ -82,11 +92,12 @@ namespace RtsNetworkingLibrary.server
             NetworkMessage message = NetworkHelper.ReceiveSingleMessage(client);
             if (message is ConnectMessage)
             {
-                message.userId = clientCounter;
+                message.playerInfo.userId = clientCounter;
                 NetworkHelper.SendSingleMessage(client, message, clientCounter);
-                clients[clientCounter] = new ClientHandler(client, this, _serverSettings, _messageHandler, clientCounter);
+                clients[clientCounter] = new ClientHandler(client, this, _serverSettings, _messageHandler, message.playerInfo);
+                _listeners.ForEach(listener => listener?.OnClientConnected(message.playerInfo));
                 clientCounter++;
-                _logger.Debug("New Client connected: " + message.userId + " = " + message.username);
+                _logger.Debug("New Client connected: " + message.playerInfo.userId + " = " + message.playerInfo.username);
             }
             else
             {
@@ -107,11 +118,23 @@ namespace RtsNetworkingLibrary.server
             }
             foreach (ClientHandler clientHandler in clients)
             {
-                if (clientHandler != null && clientHandler.userid != exceptUserId)
+                if (clientHandler != null && clientHandler.playerInfo.userId != exceptUserId)
                 {
                     clientHandler.SendTcpMessage(message);    
                 }
             }
+        }
+
+        public void AddListener(IServerListener listener)
+        {
+            if (!_listeners.Contains(listener))
+                _listeners.Add(listener);
+        }
+
+        public void RemoveListener(IServerListener listener)
+        {
+            if (_listeners.Contains(listener))
+                _listeners.Remove(listener);
         }
         
     }

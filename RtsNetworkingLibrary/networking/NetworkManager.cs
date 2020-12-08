@@ -3,9 +3,11 @@ using System.Net;
 using System.Net.Sockets;
 using RtsNetworkingLibrary.client;
 using RtsNetworkingLibrary.networking.messages.@base;
+using RtsNetworkingLibrary.networking.messages.entities;
 using RtsNetworkingLibrary.networking.utils;
 using RtsNetworkingLibrary.server;
 using RtsNetworkingLibrary.server.utils;
+using RtsNetworkingLibrary.unity.callbacks;
 using RtsNetworkingLibrary.utils;
 using UnityEngine;
 using Logger = RtsNetworkingLibrary.utils.Logger;
@@ -21,6 +23,7 @@ namespace RtsNetworkingLibrary.networking
         private ServerSettings _serverSettings;
         private Logger _logger;
         private MessageHandler _messageHandler;
+
         public string Username { get; set; }
         
         /*
@@ -99,6 +102,26 @@ namespace RtsNetworkingLibrary.networking
         {
             ConnectToServer(new IPEndPoint(IPAddress.Parse(_serverSettings.serverIp), _serverSettings.port));
         }
+
+        public void AddClientListener(IClientListener listener)
+        {
+            _client.AddListener(listener);
+        }
+
+        public void RemoveClientListener(IClientListener listener)
+        {
+            _client.RemoveListener(listener);
+        }
+
+        public void AddServerListener(IServerListener listener)
+        {
+            _server.AddListener(listener);
+        }
+        
+        public void RemoveServerListener(IServerListener listener)
+        {
+            _server.RemoveListener(listener);
+        }
         
         public Server Server
         {
@@ -110,8 +133,8 @@ namespace RtsNetworkingLibrary.networking
          */
         public void TcpSendToServer(NetworkMessage networkMessage)
         {
-            networkMessage.userId = this._client.ClientId;
-            networkMessage.username = this.Username;
+            _logger.Debug("Sending a message of type: " + networkMessage.GetType());
+            networkMessage.playerInfo = new PlayerInfo(this._client.ClientId, this.Username);
             _client.SendToServer(networkMessage);
         }
 
@@ -125,6 +148,12 @@ namespace RtsNetworkingLibrary.networking
             _server.TcpBroadcast(networkMessage, exceptUserId);
         }
 
-        
+        public void Instantiate(string assetPrefabName, Vector3 position = new Vector3(),
+            Quaternion rotation = new Quaternion())
+        {
+            Vector3 euler = rotation.eulerAngles;
+            BuildMessage buildMessage = new BuildMessage(assetPrefabName, new Vector(position.x, position.y, position.z), new Vector(euler.x, euler.y, euler.z));
+            TcpSendToServer(buildMessage);
+        }
     }
 }

@@ -1,9 +1,8 @@
 using System;
 using System.Net.Sockets;
+using RtsNetworkingLibrary.networking;
 using RtsNetworkingLibrary.networking.messages.@base;
-using RtsNetworkingLibrary.networking.messages.connection;
 using RtsNetworkingLibrary.networking.utils;
-using RtsNetworkingLibrary.server.handlers;
 using RtsNetworkingLibrary.server.utils;
 using RtsNetworkingLibrary.utils;
 
@@ -19,7 +18,7 @@ namespace RtsNetworkingLibrary.server
         private readonly ServerSettings _serverSettings;
         private readonly MessageHandler _messageHandler;
         private readonly NetworkStream _networkStream;
-        public readonly int userid;
+        public PlayerInfo playerInfo;
         
         private readonly byte[] _headerBuffer;
         private byte[] _dataBuffer;
@@ -29,7 +28,7 @@ namespace RtsNetworkingLibrary.server
         private int _messageLength;
         
         
-        public ClientHandler(TcpClient client, Server server, ServerSettings serverSettings, MessageHandler messageHandler, int userid)
+        public ClientHandler(TcpClient client, Server server, ServerSettings serverSettings, MessageHandler messageHandler, PlayerInfo playerInfo)
         {
             this._logger = new Logger(this.GetType().Name);
             this._client = client;
@@ -37,7 +36,7 @@ namespace RtsNetworkingLibrary.server
             this._networkStream = this._client.GetStream();
             this._serverSettings = serverSettings;
             this._messageHandler = messageHandler;
-            this.userid = userid;
+            this.playerInfo = playerInfo;
             this._headerBuffer = new byte[_serverSettings.headerBufferByteSize];
             
             _networkStream.BeginRead(_headerBuffer, 0, _headerBuffer.Length, ReadHeader, null);
@@ -104,7 +103,7 @@ namespace RtsNetworkingLibrary.server
         public void Disconnect(string message = "Client disconnected!")
         {
             _logger.Debug(message);
-            _server.RemoveClient(userid);
+            _server.RemoveClient(playerInfo.userId);
             _client.Close();
             _client.Dispose();
         }

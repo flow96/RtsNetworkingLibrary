@@ -3,6 +3,7 @@ using RtsNetworkingLibrary.networking;
 using RtsNetworkingLibrary.networking.messages.connection;
 using RtsNetworkingLibrary.networking.messages.entities;
 using RtsNetworkingLibrary.networking.parser;
+using RtsNetworkingLibrary.networking.utils;
 using RtsNetworkingLibrary.unity.@base;
 using RtsNetworkingLibrary.utils;
 using UnityEngine;
@@ -40,8 +41,8 @@ namespace RtsNetworkingLibrary.client.handlers
                 NetworkMonoBehaviour networkMonoBehaviour;
                 if (spawnedObject.TryGetComponent(out networkMonoBehaviour))
                 {
-                    spawnedObject.name = "network_object_" + buildMessage.entityId;
-                    networkMonoBehaviour.clientId = buildMessage.userId;
+                    spawnedObject.name = Consts.NETWORK_OBJECT_PREFIX + buildMessage.entityId;
+                    networkMonoBehaviour.clientId = buildMessage.playerInfo.userId;
                     networkMonoBehaviour.entityId = buildMessage.entityId;
                 }
                 
@@ -55,8 +56,24 @@ namespace RtsNetworkingLibrary.client.handlers
 
         protected override void HandleTransformUpdateMessage(TransformUpdate transformUpdate)
         {
-            // TODO Handle Update transform
-            
+            _logger.Debug("Received transform update");
+            GameObject toBeUpdated = GameObject.Find(Consts.NETWORK_OBJECT_PREFIX + transformUpdate.entityId);
+            if (toBeUpdated != null)
+            {
+                NetworkMonoBehaviour networkMonoBehaviour;
+                if (toBeUpdated.TryGetComponent(out networkMonoBehaviour))
+                {
+                    networkMonoBehaviour.SetNextTransform(NetworkHelper.ConvertToVector3(transformUpdate.position), NetworkHelper.ConvertToVector3(transformUpdate.rotation));
+                }
+                else
+                {
+                    throw new Exception("The Network object with id: " + transformUpdate.entityId + " has no NetworkMonoBehaviour component on it, thus it can't be updated!");
+                }
+            }
+            else
+            {
+                throw new Exception("Network object with id: " + transformUpdate.entityId + " could not be found!");
+            }
         }
 
         protected override void HandleDisconnectMessage(DisconnectMessage message)

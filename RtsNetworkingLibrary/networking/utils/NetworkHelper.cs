@@ -1,6 +1,8 @@
 using System;
 using System.Net.Sockets;
 using RtsNetworkingLibrary.networking.messages.@base;
+using RtsNetworkingLibrary.utils;
+using UnityEngine;
 
 namespace RtsNetworkingLibrary.networking.utils
 {
@@ -26,12 +28,21 @@ namespace RtsNetworkingLibrary.networking.utils
         
         public static void SendSingleMessage(TcpClient client, NetworkMessage message, int clientId)
         {
-            message.userId = clientId;
+            message.playerInfo.userId = clientId;
             byte[] data = NetworkConverter.Serialize(message);
             byte[] header = BitConverter.GetBytes(data.Length);
             client.GetStream().Write(header, 0, header.Length);
             client.GetStream().Write(data, 0, data.Length);
         }
 
+        public static Vector3 ConvertToVector3(Vector vector)
+        {
+            return new Vector3(vector.x, vector.y, vector.z);
+        }
+        
+        public static Vector ConvertToVector(Vector3 vector)
+        {
+            return new Vector(vector.x, vector.y, vector.z);
+        }
     }
 }

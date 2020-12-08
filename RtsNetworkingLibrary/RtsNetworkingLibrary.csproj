@@ -51,6 +51,7 @@
         <Compile Include="networking\messages\entities\TransformUpdate.cs" />
         <Compile Include="networking\NetworkManager.cs" />
         <Compile Include="networking\parser\BaseMessageParser.cs" />
+        <Compile Include="networking\PlayerInfo.cs" />
         <Compile Include="networking\utils\MessageHandler.cs" />
         <Compile Include="networking\utils\NetworkConverter.cs" />
         <Compile Include="networking\utils\NetworkHelper.cs" />
@@ -62,6 +63,8 @@
         <Compile Include="server\utils\ServerSettings.cs" />
         <Compile Include="unity\attributes\SyncVar.cs" />
         <Compile Include="unity\base\NetworkMonoBehaviour.cs" />
+        <Compile Include="unity\callbacks\IClientListener.cs" />
+        <Compile Include="unity\callbacks\IServerListener.cs" />
         <Compile Include="unity\DefaultNetworkMonoBehaviour.cs" />
         <Compile Include="utils\Consts.cs" />
         <Compile Include="utils\Logger.cs" />

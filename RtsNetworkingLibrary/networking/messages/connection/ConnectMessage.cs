@@ -8,7 +8,7 @@ namespace RtsNetworkingLibrary.networking.messages.connection
     {
         public ConnectMessage(string username = "")
         {
-            this.username = username;
+            this.playerInfo.username = username;
         }
     }
 }

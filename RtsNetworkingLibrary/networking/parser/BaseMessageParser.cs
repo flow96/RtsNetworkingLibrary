@@ -23,7 +23,7 @@ namespace RtsNetworkingLibrary.networking.parser
                     HandleDisconnectMessage(d);
                     break;
                 case TransformUpdate t:
-
+                    HandleTransformUpdateMessage(t);
                     break;
                 default:
                     handled = false;

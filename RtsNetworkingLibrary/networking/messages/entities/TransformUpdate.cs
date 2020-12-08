@@ -17,5 +17,6 @@ namespace RtsNetworkingLibrary.networking.messages.entities
             this.rotation = rotation;
             this.entityId = entityId;
         }
+
     }
 }
