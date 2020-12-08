@@ -35,7 +35,13 @@ namespace RtsNetworkingLibrary.server.handlers
             _logger.Debug("Handling Destroy message");
             _networkManager.TcpServerSendBroadcast(destroyMessage);
         }
-        
+
+        protected override void HandleTransformUpdateMessage(TransformUpdate transformUpdate)
+        {
+            _logger.Debug("Handling Transform Update message" + transformUpdate.entityId + " | " + transformUpdate.position + " | " + transformUpdate.rotation);
+            _networkManager.TcpServerSendBroadcast(transformUpdate, transformUpdate.userId);
+        }
+
         protected override void HandleDisconnectMessage(DisconnectMessage disconnectMessage)
         {
             _logger.Debug("Received disconnect from: " + disconnectMessage.username + " (" + disconnectMessage.userId + ")");

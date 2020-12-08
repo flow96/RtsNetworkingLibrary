@@ -48,6 +48,7 @@
         <Compile Include="networking\messages\connection\DisconnectMessage.cs" />
         <Compile Include="networking\messages\entities\BuildMessage.cs" />
         <Compile Include="networking\messages\entities\DestroyMessage.cs" />
+        <Compile Include="networking\messages\entities\TransformUpdate.cs" />
         <Compile Include="networking\NetworkManager.cs" />
         <Compile Include="networking\parser\BaseMessageParser.cs" />
         <Compile Include="networking\utils\MessageHandler.cs" />

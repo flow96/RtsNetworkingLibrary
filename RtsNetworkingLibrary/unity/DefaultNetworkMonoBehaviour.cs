@@ -7,7 +7,7 @@ namespace RtsNetworkingLibrary.unity
         
         
         
-        public override void ClientUpdate()
+        public override void ClientUpdate(bool isLocalPlayer)
         {
             
         }

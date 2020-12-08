@@ -43,7 +43,19 @@ namespace RtsNetworkingLibrary.client
                     _tcpClient.Connect(endPoint);
                     _stream = _tcpClient.GetStream();
                     NetworkHelper.SendSingleMessage(_tcpClient, new ConnectMessage(Environment.UserName), -1);
-                    ReadHandshake();
+                    NetworkMessage message = NetworkHelper.ReceiveSingleMessage(_tcpClient);
+                    if (message is ConnectMessage)
+                    {
+                        ConnectMessage connectMessage = (ConnectMessage) message;
+                        this.ClientId = connectMessage.userId;
+                        _logger.Debug("Received client id: " + ClientId);
+                        _stream.BeginRead(_headerBuffer, 0, _headerBuffer.Length, ReadHeader, null);
+                    }
+                    else
+                    {
+                        _tcpClient.Close();
+                        throw new Exception("Client expected ConnectMessage, but received: " + message.GetType());
+                    }
                 }
                 catch (Exception e)
                 {
@@ -64,36 +76,7 @@ namespace RtsNetworkingLibrary.client
                     _tcpClient.Close();    
             }
         }
-
-
-        private void ReadHandshake()
-        {
-            byte[] dataBuffer = new byte[4];
-            int headerLength = 0, msgDataLength = 0, msgReadLength = 0;
-            do
-            {
-                headerLength += _stream.Read(dataBuffer, 0, _networkManager.ServerSettings.headerBufferByteSize - headerLength);    
-            } while (headerLength < 4);
-            msgDataLength = BitConverter.ToInt32(dataBuffer, 0);
-            dataBuffer = new byte[msgDataLength];
-            do
-            {
-                msgReadLength += _stream.Read(dataBuffer, 0, msgDataLength - msgReadLength);
-            } while (msgReadLength < msgDataLength);
-            NetworkMessage msg = NetworkConverter.Deserialize(dataBuffer);
-            if (msg is ConnectMessage)
-            {
-                ConnectMessage connectMessage = (ConnectMessage) msg;
-                this.ClientId = connectMessage.userId;
-                _logger.Debug("Received client id: " + ClientId);
-                _stream.BeginRead(_headerBuffer, 0, _headerBuffer.Length, ReadHeader, null);
-            }
-            else
-            {
-                _tcpClient.Close();
-                throw new Exception("Client expected ConnectMessage, but received: " + msg.GetType());
-            }
-        }
+        
 
         private void ReadHeader(IAsyncResult ar)
         {

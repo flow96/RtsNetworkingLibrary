@@ -84,9 +84,20 @@ namespace RtsNetworkingLibrary.networking
             IsServer = false;
         }
 
+        /**
+         * Connects a client to a specific server ip
+         */
         public void ConnectToServer(IPEndPoint endPoint)
         {
             _client.Connect(endPoint);
+        }
+
+        /**
+         * Connects a client to the server, defined in the server settings
+         */
+        public void ConnectClient()
+        {
+            ConnectToServer(new IPEndPoint(IPAddress.Parse(_serverSettings.serverIp), _serverSettings.port));
         }
         
         public Server Server
@@ -107,11 +118,11 @@ namespace RtsNetworkingLibrary.networking
         /**
          * Lets the server send a broadcast to all connected clients
          */
-        public void TcpServerSendBroadcast(NetworkMessage networkMessage)
+        public void TcpServerSendBroadcast(NetworkMessage networkMessage, int exceptUserId = -1)
         {
             if(!IsServer)
                 throw new Exception("Only the server is allowed to send broadcast messages!");
-            _server.TcpBroadcast(networkMessage);
+            _server.TcpBroadcast(networkMessage, exceptUserId);
         }
 
         

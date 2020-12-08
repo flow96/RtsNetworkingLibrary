@@ -53,6 +53,12 @@ namespace RtsNetworkingLibrary.client.handlers
             
         }
 
+        protected override void HandleTransformUpdateMessage(TransformUpdate transformUpdate)
+        {
+            // TODO Handle Update transform
+            
+        }
+
         protected override void HandleDisconnectMessage(DisconnectMessage message)
         {
             

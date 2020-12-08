@@ -19,7 +19,7 @@ namespace RtsNetworkingLibrary.server
         private readonly ServerSettings _serverSettings;
         private readonly MessageHandler _messageHandler;
         private readonly NetworkStream _networkStream;
-        private readonly int _userid;
+        public readonly int userid;
         
         private readonly byte[] _headerBuffer;
         private byte[] _dataBuffer;
@@ -37,13 +37,9 @@ namespace RtsNetworkingLibrary.server
             this._networkStream = this._client.GetStream();
             this._serverSettings = serverSettings;
             this._messageHandler = messageHandler;
-            this._userid = userid;
+            this.userid = userid;
             this._headerBuffer = new byte[_serverSettings.headerBufferByteSize];
             
-            ConnectMessage connectMessage = new ConnectMessage();
-            connectMessage.userId = userid;
-            
-            SendTcpMessage(connectMessage);
             _networkStream.BeginRead(_headerBuffer, 0, _headerBuffer.Length, ReadHeader, null);
         }
 
@@ -108,7 +104,7 @@ namespace RtsNetworkingLibrary.server
         public void Disconnect(string message = "Client disconnected!")
         {
             _logger.Debug(message);
-            _server.RemoveClient(_userid);
+            _server.RemoveClient(userid);
             _client.Close();
             _client.Dispose();
         }

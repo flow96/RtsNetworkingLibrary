@@ -99,7 +99,7 @@ namespace RtsNetworkingLibrary.server
 
 
 
-        public void TcpBroadcast(NetworkMessage message)
+        public void TcpBroadcast(NetworkMessage message, int exceptUserId = -1)
         {
             if (!ServerRunning)
             {
@@ -107,7 +107,10 @@ namespace RtsNetworkingLibrary.server
             }
             foreach (ClientHandler clientHandler in clients)
             {
-                clientHandler?.SendTcpMessage(message);
+                if (clientHandler != null && clientHandler.userid != exceptUserId)
+                {
+                    clientHandler.SendTcpMessage(message);    
+                }
             }
         }
         

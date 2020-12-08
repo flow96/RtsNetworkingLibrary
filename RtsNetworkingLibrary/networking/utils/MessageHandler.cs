@@ -73,6 +73,7 @@ namespace RtsNetworkingLibrary.networking.utils
                 _inboundServerMessages.TryDequeue(out message);
                 if (!_defaultServerMessageParser.ParseMessage(message))
                 {
+                    _logger.Debug("Message of type: " + message.GetType() + " was not handled, sending it to custom server parser");
                     // Message was not handled by default handler, try calling a custom one
                     foreach (CustomMessageParser parser in customServerMessageParser)
                     {
@@ -88,6 +89,7 @@ namespace RtsNetworkingLibrary.networking.utils
                 _inboundClientMessages.TryDequeue(out message);
                 if (!_defaultClientMessageParser.ParseMessage(message))
                 {
+                    _logger.Debug("Message of type: " + message.GetType() + " was not handled, sending it to custom client parser");
                     // Message was not handled by default handler, try calling a custom one
                     foreach (CustomMessageParser parser in customClientMessageParser)
                     {
