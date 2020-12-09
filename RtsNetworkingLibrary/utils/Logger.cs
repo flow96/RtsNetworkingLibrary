@@ -6,6 +6,8 @@ namespace RtsNetworkingLibrary.utils
     {
         public static LoggerType LoggerType { get; set; } = LoggerType.UNITY;
 
+        public static bool loggingEnabled = true;
+        
         private readonly string prefix;
 
         public Logger(string prefix)
@@ -15,10 +17,13 @@ namespace RtsNetworkingLibrary.utils
 
         public void Debug(object msg)
         {
-            if(LoggerType == LoggerType.UNITY)
-                UnityEngine.Debug.Log(GetFormattedMessage(msg));
-            else if(LoggerType == LoggerType.DEDICATED)
-                Console.WriteLine(GetFormattedMessage(msg));
+            if (loggingEnabled)
+            {
+                if(LoggerType == LoggerType.UNITY)
+                    UnityEngine.Debug.Log(GetFormattedMessage(msg));
+                else if(LoggerType == LoggerType.DEDICATED)
+                    Console.WriteLine(GetFormattedMessage(msg));   
+            }
         }
 
 

@@ -36,10 +36,22 @@ namespace RtsNetworkingLibrary.server.handlers
             _networkManager.TcpServerSendBroadcast(destroyMessage);
         }
 
-        protected override void HandleTransformUpdateMessage(TransformUpdate transformUpdate)
+        protected override void HandleTransformUpdateMessage(TransformUpdateMessage transformUpdateMessage)
         {
-            _logger.Debug("Handling Transform Update message id: " + transformUpdate.entityId + " | position: " + transformUpdate.position + " | rotation: " + transformUpdate.rotation);
-            _networkManager.TcpServerSendBroadcast(transformUpdate, transformUpdate.playerInfo.userId);
+            _logger.Debug("Handling Transform Update message id: " + transformUpdateMessage.entityId + " | position: " + transformUpdateMessage.position + " | rotation: " + transformUpdateMessage.rotation);
+            _networkManager.TcpServerSendBroadcast(transformUpdateMessage, transformUpdateMessage.playerInfo.userId);
+        }
+
+        protected override void HandleTransformUpdateListMessage(TransformUpdateListMessage transformUpdateListMessage)
+        {
+            _logger.Debug("Handling Transform Update List Message with: " + transformUpdateListMessage.updates.Length + " changes");
+            _networkManager.TcpServerSendBroadcast(transformUpdateListMessage, transformUpdateListMessage.playerInfo.userId);
+        }
+
+        protected override void HandleUpdateSyncVarMessage(UpdateSyncVarMessage updateSyncVarMessage)
+        {
+            _logger.Debug("Handling Update Sync Var Message with: " + updateSyncVarMessage.data.Length + " changes");
+            _networkManager.TcpServerSendBroadcast(updateSyncVarMessage, updateSyncVarMessage.playerInfo.userId);
         }
 
         protected override void HandleDisconnectMessage(DisconnectMessage disconnectMessage)

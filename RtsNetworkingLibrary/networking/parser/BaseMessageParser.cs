@@ -22,8 +22,14 @@ namespace RtsNetworkingLibrary.networking.parser
                 case DisconnectMessage d:
                     HandleDisconnectMessage(d);
                     break;
-                case TransformUpdate t:
+                case TransformUpdateMessage t:
                     HandleTransformUpdateMessage(t);
+                    break;
+                case UpdateSyncVarMessage us:
+                    HandleUpdateSyncVarMessage(us);
+                    break;
+                case TransformUpdateListMessage tUpdate:
+                    HandleTransformUpdateListMessage(tUpdate);
                     break;
                 default:
                     handled = false;
@@ -35,7 +41,11 @@ namespace RtsNetworkingLibrary.networking.parser
         
         protected  abstract void HandleDestroyMessage(DestroyMessage message);
 
-        protected abstract void HandleTransformUpdateMessage(TransformUpdate transformUpdate);
+        protected abstract void HandleTransformUpdateMessage(TransformUpdateMessage transformUpdateMessage);
+
+        protected abstract void HandleTransformUpdateListMessage(TransformUpdateListMessage transformUpdateListMessage);
+
+        protected abstract void HandleUpdateSyncVarMessage(UpdateSyncVarMessage updateSyncVarMessage);
         
         protected  abstract void HandleDisconnectMessage(DisconnectMessage message);
     }

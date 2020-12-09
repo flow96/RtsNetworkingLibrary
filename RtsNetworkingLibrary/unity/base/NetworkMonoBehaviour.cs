@@ -6,7 +6,6 @@ using RtsNetworkingLibrary.networking.messages.entities;
 using RtsNetworkingLibrary.unity.attributes;
 using RtsNetworkingLibrary.utils;
 using UnityEngine;
-using Logger = RtsNetworkingLibrary.utils.Logger;
 
 namespace RtsNetworkingLibrary.unity.@base
 {
@@ -44,7 +43,6 @@ namespace RtsNetworkingLibrary.unity.@base
             _lastPos = transform.position;
             _lastRot = transform.rotation.eulerAngles;
             IsLocalPlayer = (_networkManager.ClientId == clientId);
-            Debug.Log("Is local player: " + IsLocalPlayer);
             
             FieldInfo[] objectFields = this.GetType().GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
             for (int i = 0; i < objectFields.Length; i++)
@@ -53,7 +51,6 @@ namespace RtsNetworkingLibrary.unity.@base
                 if (attribute != null)
                     _syncVars.Add(objectFields[i].Name, objectFields[i].GetValue(this));
             }
-            Debug.Log("Hi");
         }
 
         private void Update()
@@ -95,16 +92,15 @@ namespace RtsNetworkingLibrary.unity.@base
             {
                 _lastPos = transform.position;
                 _lastRot = transform.rotation.eulerAngles;
-                _networkManager.TcpSendToServer(new TransformUpdate(new Vector(_lastPos.x, _lastPos.y, _lastPos.z), 
+                /*
+                _networkManager.EnqueOutboundUpdateMessage(new TransformUpdateMessage(new Vector(_lastPos.x, _lastPos.y, _lastPos.z), 
+                    new Vector(_lastRot.x, _lastRot.y, _lastRot.z), entityId));
+                    */
+                _networkManager.TcpSendToServer(new TransformUpdateMessage(new Vector(_lastPos.x, _lastPos.y, _lastPos.z), 
                     new Vector(_lastRot.x, _lastRot.y, _lastRot.z), entityId));
             }
         }
 
-        private bool Compare(Vector3 one, Vector3 two)
-        {
-            float precision = .05f;
-            return !(Math.Abs(one.x - two.x) > precision || Math.Abs(one.y - two.y) > precision || Math.Abs(one.z - two.z) > precision);
-        }
 
         private void UpdateSyncVars()
         {
@@ -114,15 +110,42 @@ namespace RtsNetworkingLibrary.unity.@base
                 SyncVar attribute = Attribute.GetCustomAttribute(objectFields[i], typeof(SyncVar)) as SyncVar;
                 if (attribute != null)
                 {
+                    List<UpdateSyncVarMessage.SyncVarData> changes = new List<UpdateSyncVarMessage.SyncVarData>();
                     if (_syncVars.ContainsKey(objectFields[i].Name) &&
                                               !_syncVars[objectFields[i].Name].Equals(objectFields[i].GetValue(this)))
                     {
-                        Debug.Log("Syncvar has changed: '" + objectFields[i].Name + "' => from: " + _syncVars[objectFields[i].Name] + " to: " + objectFields[i].GetValue(this));
                         _syncVars[objectFields[i].Name] = objectFields[i].GetValue(this);
-                        Debug.Log(_syncVars[objectFields[i].Name].Equals(objectFields[i].GetValue(this)));
+                        changes.Add(new UpdateSyncVarMessage.SyncVarData(objectFields[i].Name, objectFields[i].GetValue(this)));
+                    }
+                    if (changes.Count > 0)
+                    {
+                        UpdateSyncVarMessage msg = new UpdateSyncVarMessage(changes.ToArray(), this.entityId);
+                        _networkManager.TcpSendToServer(msg);
                     }
                 }
             }
+        }
+
+        public void UpdateSyncVars(UpdateSyncVarMessage.SyncVarData[] data)
+        {
+            FieldInfo[] objectFields = this.GetType().GetFields(BindingFlags.Instance | BindingFlags.Public);
+            for (int i = 0; i < objectFields.Length; i++)
+            {
+                foreach (UpdateSyncVarMessage.SyncVarData syncVarData in data)
+                {
+                    if (objectFields[i].Name == syncVarData.name)
+                    {
+                        objectFields[i].SetValue(this, syncVarData.value);
+                        break;
+                    }
+                }
+            }
+        }
+        
+        private bool Compare(Vector3 one, Vector3 two)
+        {
+            float precision = .5f;
+            return !(Math.Abs(one.x - two.x) > precision || Math.Abs(one.y - two.y) > precision || Math.Abs(one.z - two.z) > precision);
         }
 
         public abstract void ClientUpdate(bool isLocalPlayer);

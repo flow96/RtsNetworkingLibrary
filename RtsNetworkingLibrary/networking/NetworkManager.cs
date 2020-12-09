@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using RtsNetworkingLibrary.client;
@@ -24,6 +27,8 @@ namespace RtsNetworkingLibrary.networking
         private Logger _logger;
         private MessageHandler _messageHandler;
 
+        private int _delay = 0;
+        
         public string Username { get; set; }
         
         /*
@@ -37,6 +42,8 @@ namespace RtsNetworkingLibrary.networking
         public ServerSettings ServerSettings => _serverSettings;
 
         public MessageHandler MessageHandler => _messageHandler;
+        
+        private readonly ConcurrentQueue<TransformUpdateMessage> _outBoundMessages = new ConcurrentQueue<TransformUpdateMessage>();
 
         public NetworkManager()
         {
@@ -65,6 +72,28 @@ namespace RtsNetworkingLibrary.networking
             _client?.Disconnect();
         }
 
+        private void Update()
+        {
+            --_delay;
+            if (_delay <= 0)
+            {
+                _delay = 60 / ServerSettings.sendUpdateThresholdPerSecond;
+                List<TransformUpdateMessage> msgs = new List<TransformUpdateMessage>();
+                for (int i = 0; i < _serverSettings.maxHandledMessagesPerFrame && i < _outBoundMessages.Count; i++)
+                {
+                    if(_outBoundMessages.TryDequeue(out var outMsg))
+                        msgs.Add(outMsg);
+                }
+
+                if (msgs.Count > 0)
+                {
+                    TransformUpdateListMessage message = new TransformUpdateListMessage(msgs.ToArray());
+                
+                    TcpSendToServer(message);
+                }
+                    
+            }
+        }
 
         public void StartServer()
         {
@@ -121,6 +150,15 @@ namespace RtsNetworkingLibrary.networking
         public void RemoveServerListener(IServerListener listener)
         {
             _server.RemoveListener(listener);
+        }
+
+        public void EnqueOutboundUpdateMessage(TransformUpdateMessage message)
+        {
+            TransformUpdateMessage old;
+            if (_outBoundMessages.Contains(message))
+                _outBoundMessages.TryDequeue(out old);
+            old = null;
+            _outBoundMessages.Enqueue(message);
         }
         
         public Server Server

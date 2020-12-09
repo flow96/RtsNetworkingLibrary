@@ -54,25 +54,53 @@ namespace RtsNetworkingLibrary.client.handlers
             
         }
 
-        protected override void HandleTransformUpdateMessage(TransformUpdate transformUpdate)
+        protected override void HandleTransformUpdateMessage(TransformUpdateMessage transformUpdateMessage)
         {
             _logger.Debug("Received transform update");
-            GameObject toBeUpdated = GameObject.Find(Consts.NETWORK_OBJECT_PREFIX + transformUpdate.entityId);
+            GameObject toBeUpdated = GameObject.Find(Consts.NETWORK_OBJECT_PREFIX + transformUpdateMessage.entityId);
             if (toBeUpdated != null)
             {
                 NetworkMonoBehaviour networkMonoBehaviour;
                 if (toBeUpdated.TryGetComponent(out networkMonoBehaviour))
                 {
-                    networkMonoBehaviour.SetNextTransform(NetworkHelper.ConvertToVector3(transformUpdate.position), NetworkHelper.ConvertToVector3(transformUpdate.rotation));
+                    networkMonoBehaviour.SetNextTransform(NetworkHelper.ConvertToVector3(transformUpdateMessage.position), NetworkHelper.ConvertToVector3(transformUpdateMessage.rotation));
                 }
                 else
                 {
-                    throw new Exception("The Network object with id: " + transformUpdate.entityId + " has no NetworkMonoBehaviour component on it, thus it can't be updated!");
+                    throw new Exception("The Network object with id: " + transformUpdateMessage.entityId + " has no NetworkMonoBehaviour component on it, thus it can't be updated!");
                 }
             }
             else
             {
-                throw new Exception("Network object with id: " + transformUpdate.entityId + " could not be found!");
+                throw new Exception("Network object with id: " + transformUpdateMessage.entityId + " could not be found!");
+            }
+        }
+
+        protected override void HandleTransformUpdateListMessage(TransformUpdateListMessage transformUpdateListMessage)
+        {
+            foreach (TransformUpdateMessage updateMessage in transformUpdateListMessage.updates)
+            {
+                HandleTransformUpdateMessage(updateMessage);
+            }
+        }
+
+        protected override void HandleUpdateSyncVarMessage(UpdateSyncVarMessage updateSyncVarMessage)
+        {
+            _logger.Debug("Received Update Sync Var Message");
+            GameObject toBeUpdated = GameObject.Find(Consts.NETWORK_OBJECT_PREFIX + updateSyncVarMessage.entityId);
+            if (toBeUpdated == null)
+            {
+                throw new Exception("Could not find Network Object with id: " + updateSyncVarMessage.entityId + " to update sync vars");
+            }
+
+            NetworkMonoBehaviour networkMonoBehaviour;
+            if (toBeUpdated.TryGetComponent(out networkMonoBehaviour))
+            {
+                networkMonoBehaviour.UpdateSyncVars(updateSyncVarMessage.data);
+            }
+            else
+            {
+                throw new Exception("The GameObject with network id: " + updateSyncVarMessage.entityId + " has no NetworkMonoBehaviour Script on it!");
             }
         }
 
