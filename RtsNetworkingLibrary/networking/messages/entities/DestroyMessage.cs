@@ -6,11 +6,11 @@ namespace RtsNetworkingLibrary.networking.messages.entities
     [Serializable]
     public class DestroyMessage : NetworkMessage
     {
-        public readonly int id;
+        public readonly ulong entityId;
         
-        public DestroyMessage(int buildingId)
+        public DestroyMessage(ulong entityId)
         {
-            this.id = buildingId;
+            this.entityId = entityId;
         }
     }
 }

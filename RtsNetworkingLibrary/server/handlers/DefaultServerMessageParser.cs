@@ -1,4 +1,5 @@
 using RtsNetworkingLibrary.networking;
+using RtsNetworkingLibrary.networking.manager;
 using RtsNetworkingLibrary.networking.messages.connection;
 using RtsNetworkingLibrary.networking.messages.entities;
 using RtsNetworkingLibrary.networking.parser;

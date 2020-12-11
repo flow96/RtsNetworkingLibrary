@@ -42,6 +42,8 @@
     <ItemGroup>
         <Compile Include="client\Client.cs" />
         <Compile Include="client\handlers\DefaultClientMessageParser.cs" />
+        <Compile Include="networking\manager\NetworkManager.cs" />
+        <Compile Include="networking\manager\NetworkObject.cs" />
         <Compile Include="networking\messages\base\InboundMessage.cs" />
         <Compile Include="networking\messages\base\NetworkMessage.cs" />
         <Compile Include="networking\messages\connection\ConnectMessage.cs" />
@@ -51,7 +53,6 @@
         <Compile Include="networking\messages\entities\TransformUpdateMessage.cs" />
         <Compile Include="networking\messages\entities\TransformUpdateListMessage.cs" />
         <Compile Include="networking\messages\entities\UpdateSyncVarMessage.cs" />
-        <Compile Include="networking\NetworkManager.cs" />
         <Compile Include="networking\parser\BaseMessageParser.cs" />
         <Compile Include="networking\PlayerInfo.cs" />
         <Compile Include="networking\utils\MessageHandler.cs" />

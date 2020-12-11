@@ -1,5 +1,5 @@
 using System;
-using RtsNetworkingLibrary.networking;
+using RtsNetworkingLibrary.networking.manager;
 using RtsNetworkingLibrary.networking.messages.connection;
 using RtsNetworkingLibrary.networking.messages.entities;
 using RtsNetworkingLibrary.networking.parser;
@@ -32,32 +32,31 @@ namespace RtsNetworkingLibrary.client.handlers
             GameObject toBeSpawned = (GameObject)Resources.Load(Consts.NETWORK_PREFABS_LOCATION + buildMessage.prefabName, typeof(GameObject));
             if (toBeSpawned == null)
                 throw new Exception("Could not find Prefab with name: " + buildMessage.prefabName);
-            else
+            
+            GameObject spawnedObject = Instantiate(toBeSpawned,
+                new Vector3(buildMessage.position.x, buildMessage.position.y, buildMessage.position.z),
+                Quaternion.Euler(buildMessage.rotation.x, buildMessage.rotation.y, buildMessage.rotation.z));
+            
+            NetworkMonoBehaviour networkMonoBehaviour;
+            if (spawnedObject.TryGetComponent(out networkMonoBehaviour))
             {
-                GameObject spawnedObject = Instantiate(toBeSpawned,
-                    new Vector3(buildMessage.position.x, buildMessage.position.y, buildMessage.position.z),
-                    Quaternion.Euler(buildMessage.rotation.x, buildMessage.rotation.y, buildMessage.rotation.z));
-                
-                NetworkMonoBehaviour networkMonoBehaviour;
-                if (spawnedObject.TryGetComponent(out networkMonoBehaviour))
-                {
-                    spawnedObject.name = Consts.NETWORK_OBJECT_PREFIX + buildMessage.entityId;
-                    networkMonoBehaviour.clientId = buildMessage.playerInfo.userId;
-                    networkMonoBehaviour.entityId = buildMessage.entityId;
-                }
-                
+                networkMonoBehaviour.clientId = buildMessage.playerInfo.userId;
+                networkMonoBehaviour.entityId = buildMessage.entityId;
+                networkMonoBehaviour.prefabName = buildMessage.prefabName;
+                _networkManager.OnNetworkObjectSpawned(networkMonoBehaviour.entityId, networkMonoBehaviour, spawnedObject);
             }
         }
 
         protected override void HandleDestroyMessage(DestroyMessage message)
         {
-            
+            Destroy(_networkManager.GetGameObjectById(message.entityId));
+            _networkManager.OnNetworkObjectDestroyed(message.entityId);
         }
 
         protected override void HandleTransformUpdateMessage(TransformUpdateMessage transformUpdateMessage)
         {
             _logger.Debug("Received transform update");
-            GameObject toBeUpdated = GameObject.Find(Consts.NETWORK_OBJECT_PREFIX + transformUpdateMessage.entityId);
+            GameObject toBeUpdated = _networkManager.GetGameObjectById(transformUpdateMessage.entityId)?.gameObject;
             if (toBeUpdated != null)
             {
                 NetworkMonoBehaviour networkMonoBehaviour;
@@ -87,7 +86,7 @@ namespace RtsNetworkingLibrary.client.handlers
         protected override void HandleUpdateSyncVarMessage(UpdateSyncVarMessage updateSyncVarMessage)
         {
             _logger.Debug("Received Update Sync Var Message");
-            GameObject toBeUpdated = GameObject.Find(Consts.NETWORK_OBJECT_PREFIX + updateSyncVarMessage.entityId);
+            GameObject toBeUpdated = _networkManager.GetGameObjectById(updateSyncVarMessage.entityId)?.gameObject;
             if (toBeUpdated == null)
             {
                 throw new Exception("Could not find Network Object with id: " + updateSyncVarMessage.entityId + " to update sync vars");

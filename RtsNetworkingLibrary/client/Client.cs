@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using RtsNetworkingLibrary.networking;
+using RtsNetworkingLibrary.networking.manager;
 using RtsNetworkingLibrary.networking.messages.@base;
 using RtsNetworkingLibrary.networking.messages.connection;
 using RtsNetworkingLibrary.networking.utils;
@@ -30,13 +31,13 @@ namespace RtsNetworkingLibrary.client
 
         public int ClientId { private set; get; } = -1;
 
-        public Client(NetworkManager networkManager)
+        public Client()
         {
             _logger = new Logger(this.GetType().Name);
             
             _tcpClient = new TcpClient();
-            _networkManager = networkManager;
-            _headerBuffer = new byte[networkManager.ServerSettings.headerBufferByteSize];
+            _networkManager = NetworkManager.Instance;
+            _headerBuffer = new byte[_networkManager.ServerSettings.headerBufferByteSize];
         }
 
         public void Connect(IPEndPoint endPoint)
@@ -163,5 +164,6 @@ namespace RtsNetworkingLibrary.client
             if (_listeners.Contains(listener))
                 _listeners.Remove(listener);
         }
+
     }
 }

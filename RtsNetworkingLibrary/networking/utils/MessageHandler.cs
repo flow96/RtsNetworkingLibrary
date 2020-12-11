@@ -1,6 +1,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using RtsNetworkingLibrary.client.handlers;
+using RtsNetworkingLibrary.networking.manager;
 using RtsNetworkingLibrary.networking.messages.@base;
 using RtsNetworkingLibrary.networking.parser;
 using RtsNetworkingLibrary.server.handlers;
@@ -19,15 +20,15 @@ namespace RtsNetworkingLibrary.networking.utils
         // Public list of custom message parser
         public List<CustomMessageParser> customServerMessageParser = new List<CustomMessageParser>();
         public List<CustomMessageParser> customClientMessageParser = new List<CustomMessageParser>();
-        
-        private readonly RtsNetworkingLibrary.utils.Logger _logger;
-        
+
         private readonly ConcurrentQueue<NetworkMessage> _inboundServerMessages = new ConcurrentQueue<NetworkMessage>();
         private readonly ConcurrentQueue<NetworkMessage> _inboundClientMessages = new ConcurrentQueue<NetworkMessage>();
         private BaseMessageParser _defaultServerMessageParser;
         private BaseMessageParser _defaultClientMessageParser;
         private ServerSettings _settings;
         private NetworkManager _networkManager;
+        
+        private readonly RtsNetworkingLibrary.utils.Logger _logger;
 
         MessageHandler()
         {

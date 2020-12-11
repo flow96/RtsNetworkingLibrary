@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using RtsNetworkingLibrary.networking;
+using RtsNetworkingLibrary.networking.manager;
 using RtsNetworkingLibrary.networking.messages.entities;
 using RtsNetworkingLibrary.unity.attributes;
 using RtsNetworkingLibrary.utils;
@@ -12,6 +13,8 @@ namespace RtsNetworkingLibrary.unity.@base
     public abstract class NetworkMonoBehaviour : MonoBehaviour
     {
 
+        public string prefabName = "";
+        
         private NetworkManager _networkManager;
         public int clientId;
         public ulong entityId;
@@ -25,11 +28,20 @@ namespace RtsNetworkingLibrary.unity.@base
         public bool IsLocalPlayer { get; private set; } = true;
         
         private readonly Dictionary<object, object> _syncVars = new Dictionary<object, object>();
-        private int _delay = 0;
-        
+        private float _delay = 0;
+        private float _fixedDealy = 0;
+        private float _deltaInterpolation = 0;
+
+
+        private void Awake()
+        {
+            _nextPos = transform.position;
+            _nextRot = transform.rotation.eulerAngles;
+        }
+
         private void Start()
         {
-            this._networkManager = GameObject.Find("NetworkManager").GetComponent<NetworkManager>();
+            _networkManager = NetworkManager.Instance;
             if (_networkManager == null)
             {
                 throw new Exception(
@@ -40,6 +52,8 @@ namespace RtsNetworkingLibrary.unity.@base
             {
                 throw new Exception("A NetworkMonoBehaviour Object must be instantiated over the network!");
             }
+
+            _fixedDealy = _networkManager.ServerSettings.sendUpdateThresholdPerSecond / 60f;
             _lastPos = transform.position;
             _lastRot = transform.rotation.eulerAngles;
             IsLocalPlayer = (_networkManager.ClientId == clientId);
@@ -60,10 +74,10 @@ namespace RtsNetworkingLibrary.unity.@base
             ClientUpdate(IsLocalPlayer);
             if (IsLocalPlayer)
             {
-                --_delay;
-                if (_delay <= 0)
+                _delay += Time.deltaTime;
+                if (_delay >= _fixedDealy)
                 {
-                    _delay = 60 / _networkManager.ServerSettings.sendUpdateThresholdPerSecond;
+                    _delay = 0;
                     if(syncTransform)
                         UpdateTransform();
                     UpdateSyncVars();
@@ -72,9 +86,9 @@ namespace RtsNetworkingLibrary.unity.@base
             else
             {
                 if (!Compare(transform.position, _nextPos) || !Compare(transform.rotation.eulerAngles, _nextRot))
-                {
-                    transform.position = Vector3.Lerp(transform.position, _nextPos,
-                        Time.deltaTime * _networkManager.ServerSettings.sendUpdateThresholdPerSecond);
+                {                    
+                    _deltaInterpolation += Time.deltaTime * _networkManager.ServerSettings.sendUpdateThresholdPerSecond;
+                    transform.position = Vector3.Lerp(transform.position, _nextPos, _deltaInterpolation);
                     transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(_nextRot), Time.deltaTime * _networkManager.ServerSettings.sendUpdateThresholdPerSecond);
                 }
             }
@@ -84,6 +98,8 @@ namespace RtsNetworkingLibrary.unity.@base
         {
             this._nextPos = nextPos;
             this._nextRot = nextRot;
+            _deltaInterpolation = 0;
+            
         }
 
         private void UpdateTransform()
@@ -92,12 +108,13 @@ namespace RtsNetworkingLibrary.unity.@base
             {
                 _lastPos = transform.position;
                 _lastRot = transform.rotation.eulerAngles;
-                /*
+
                 _networkManager.EnqueOutboundUpdateMessage(new TransformUpdateMessage(new Vector(_lastPos.x, _lastPos.y, _lastPos.z), 
                     new Vector(_lastRot.x, _lastRot.y, _lastRot.z), entityId));
-                    */
+                /*
                 _networkManager.TcpSendToServer(new TransformUpdateMessage(new Vector(_lastPos.x, _lastPos.y, _lastPos.z), 
                     new Vector(_lastRot.x, _lastRot.y, _lastRot.z), entityId));
+                    */
             }
         }
 

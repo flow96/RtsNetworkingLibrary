@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using RtsNetworkingLibrary.networking.messages.@base;
@@ -122,6 +123,15 @@ namespace RtsNetworkingLibrary.server
                 {
                     clientHandler.SendTcpMessage(message);    
                 }
+            }
+        }
+
+        public void SendToClient(int clientId, NetworkMessage networkMessage)
+        {
+            foreach (ClientHandler handler in clients)
+            {
+                if(handler.playerInfo.userId == clientId)
+                    handler.SendTcpMessage(networkMessage);
             }
         }
 
