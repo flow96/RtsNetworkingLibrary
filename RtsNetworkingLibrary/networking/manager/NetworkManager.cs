@@ -17,12 +17,12 @@ using Logger = RtsNetworkingLibrary.utils.Logger;
 namespace RtsNetworkingLibrary.networking.manager
 {
     [RequireComponent(typeof(ServerSettings)), RequireComponent(typeof(MessageHandler))]
-    public class NetworkManager : MonoBehaviour, IServerListener
+    public class NetworkManager : MonoBehaviour, IClientListener
     {
         public static NetworkManager Instance;
 
-        public string userName;
-        
+        public string username;
+
         private Server _server;
         private Client _client;
         
@@ -30,25 +30,12 @@ namespace RtsNetworkingLibrary.networking.manager
         private Logger _logger;
         private MessageHandler _messageHandler;
 
-        private int _delay = 0;
-        
         private readonly List<TransformUpdateMessage> _outBoundMessages = new List<TransformUpdateMessage>();
         private readonly Dictionary<ulong, NetworkMonoBehaviour> _spawnedObjects = new Dictionary<ulong, NetworkMonoBehaviour>();
-        private List<PlayerInfo> _newPlayers = new List<PlayerInfo>();
+        public readonly Dictionary<int, Action<GameObject>> instantiateCallbacks = new Dictionary<int, Action<GameObject>>(); 
+        private readonly List<PlayerInfo> _newPlayers = new List<PlayerInfo>();
+        private readonly List<PlayerInfo> _connectedPlayers = new List<PlayerInfo>();
         
-        public class Test
-        {
-            public NetworkMonoBehaviour networkMonoBehaviour;
-            public GameObject gameObject;
-            public ulong entityId;
-
-            public Test(NetworkMonoBehaviour networkMonoBehaviour, GameObject gameObject, ulong entityId)
-            {
-                this.networkMonoBehaviour = networkMonoBehaviour;
-                this.gameObject = gameObject;
-                this.entityId = entityId;
-            }
-        }
         
         /**
          * Indicates if the local instance of this NetworkManager is the hosting server
@@ -61,14 +48,26 @@ namespace RtsNetworkingLibrary.networking.manager
         public ServerSettings ServerSettings => _serverSettings;
 
         public MessageHandler MessageHandler => _messageHandler;
-        
 
+        public Client Client => _client;
+        
+        public Server Server => _server;
+
+        public List<PlayerInfo> ConnectedPlayers => _connectedPlayers;
+
+
+        public string Username
+        {
+            set => username = value;
+        }
+        
         public NetworkManager()
         {
             _logger = new Logger(this.GetType().Name);
             Instance = this;
+            this.username = Environment.UserName;
         }
-
+        
         private void Awake()
         {
             _serverSettings = GetComponent<ServerSettings>();
@@ -82,7 +81,7 @@ namespace RtsNetworkingLibrary.networking.manager
             _server = new Server();
             _client = new Client();
             
-            _server.AddListener(this);
+            _client.AddListener(this);
         }
 
 
@@ -140,7 +139,11 @@ namespace RtsNetworkingLibrary.networking.manager
             }
             ConnectToServer(endPoint);
         }
-        
+
+        public void SetUsername(string username)
+        {
+            this.username = username;
+        }
 
         public void StopServer()
         {
@@ -191,10 +194,6 @@ namespace RtsNetworkingLibrary.networking.manager
             _outBoundMessages.Add(message);
         }
         
-        public Server Server
-        {
-            get => _server;
-        }
 
         /**
          * Sends a message to the Server
@@ -202,7 +201,6 @@ namespace RtsNetworkingLibrary.networking.manager
         public void TcpSendToServer(NetworkMessage networkMessage)
         {
             _logger.Debug("Sending a message of type: " + networkMessage.GetType());
-            networkMessage.playerInfo = new PlayerInfo(this._client.ClientId, this.userName);
             _client.SendToServer(networkMessage);
         }
 
@@ -217,10 +215,16 @@ namespace RtsNetworkingLibrary.networking.manager
         }
 
         public void Instantiate(string assetPrefabName, Vector3 position = new Vector3(),
-            Quaternion rotation = new Quaternion())
+            Quaternion rotation = new Quaternion(), Action<GameObject> callback = null)
         {
+            _logger.Debug("Hashcode: " + callback?.GetHashCode());
             Vector3 euler = rotation.eulerAngles;
             BuildMessage buildMessage = new BuildMessage(assetPrefabName, new Vector(position.x, position.y, position.z), new Vector(euler.x, euler.y, euler.z));
+            if (callback != null)
+            {
+                buildMessage.callbackHashCode = callback.GetHashCode();
+                instantiateCallbacks.Add(callback.GetHashCode(), callback);
+            }
             TcpSendToServer(buildMessage);
         }
 
@@ -240,27 +244,26 @@ namespace RtsNetworkingLibrary.networking.manager
             return _spawnedObjects[entityId];
         }
 
-        public void OnClientConnected(PlayerInfo playerInfo)
+        
+        public void OnConnected()
         {
-            _logger.Debug("Sending the current objects to the new client " + _spawnedObjects.Count);
-            if (!IsServer || playerInfo == null)
-                throw new Exception("Illegal action! This callback is only triggered by the server!");
+            OtherPlayerConnected(new PlayerInfo(_client.ClientId, this.username));
+        }
+
+        public void OnDisconnected()
+        {
+            _logger.Debug("Client disconnected!");
+        }
+
+        public void OtherPlayerConnected(PlayerInfo playerInfo)
+        {
             _newPlayers.Add(playerInfo);
+            _connectedPlayers.Add(playerInfo);
         }
 
-        public void OnClientDisconnected(PlayerInfo playerInfo)
+        public void OtherPlayerDisconnected(PlayerInfo playerInfo)
         {
-            
-        }
-
-        public void OnServerStarted()
-        {
-            
-        }
-
-        public void OnServerStopped()
-        {
-            
+            _connectedPlayers.Remove(playerInfo);
         }
     }
 }

@@ -18,7 +18,8 @@ namespace RtsNetworkingLibrary.server
         private readonly ServerSettings _serverSettings;
         private readonly MessageHandler _messageHandler;
         private readonly NetworkStream _networkStream;
-        public PlayerInfo playerInfo;
+        
+        public readonly PlayerInfo playerInfo;
         
         private readonly byte[] _headerBuffer;
         private byte[] _dataBuffer;
@@ -79,6 +80,8 @@ namespace RtsNetworkingLibrary.server
             {
                 // Message fully received
                 NetworkMessage msg = NetworkConverter.Deserialize(_dataBuffer);
+                // Set the player info here again, so the client can't trick the server by sending fake data
+                msg.playerInfo = playerInfo;
                 _messageHandler.AddServerMessage(msg);
                 ResetAndWaitForNext();
             }
@@ -100,14 +103,18 @@ namespace RtsNetworkingLibrary.server
             _networkStream.BeginRead(_headerBuffer, 0, _headerBuffer.Length, ReadHeader, null);
         }
 
-        public void Disconnect(string message = "Client disconnected!")
+        private void Disconnect(string message = "Client disconnected!")
         {
             _logger.Debug(message);
-            _server.RemoveClient(playerInfo.userId);
+            _server.DisconnectClient(playerInfo.userId);
+        }
+
+        public void Close(string serverMessage = "Closing connection to client")
+        {
+            _logger.Debug(serverMessage + " , UserId: " + playerInfo.userId);
             _client.Close();
             _client.Dispose();
         }
-
         
         public void SendTcpMessage(NetworkMessage networkMessage)
         {

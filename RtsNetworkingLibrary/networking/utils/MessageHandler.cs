@@ -21,13 +21,13 @@ namespace RtsNetworkingLibrary.networking.utils
         public List<CustomMessageParser> customServerMessageParser = new List<CustomMessageParser>();
         public List<CustomMessageParser> customClientMessageParser = new List<CustomMessageParser>();
 
-        private readonly ConcurrentQueue<NetworkMessage> _inboundServerMessages = new ConcurrentQueue<NetworkMessage>();
-        private readonly ConcurrentQueue<NetworkMessage> _inboundClientMessages = new ConcurrentQueue<NetworkMessage>();
+        private readonly Queue<NetworkMessage> _inboundServerMessages = new Queue<NetworkMessage>();
+        private readonly Queue<NetworkMessage> _inboundClientMessages = new Queue<NetworkMessage>();
         private BaseMessageParser _defaultServerMessageParser;
         private BaseMessageParser _defaultClientMessageParser;
         private ServerSettings _settings;
         private NetworkManager _networkManager;
-        
+
         private readonly RtsNetworkingLibrary.utils.Logger _logger;
 
         MessageHandler()
@@ -67,11 +67,10 @@ namespace RtsNetworkingLibrary.networking.utils
         private void Update()
         {
             int handledMessages = 0;
-            // Handle Server messages
-            while (!_inboundServerMessages.IsEmpty && handledMessages++ < _settings.maxHandledMessagesPerFrame)
+            // Handle Server messages           
+            while (_inboundServerMessages.Count > 0 && handledMessages++ < _settings.maxHandledMessagesPerFrame)
             {
-                NetworkMessage message;
-                _inboundServerMessages.TryDequeue(out message);
+                NetworkMessage message = _inboundServerMessages.Dequeue();
                 if (!_defaultServerMessageParser.ParseMessage(message))
                 {
                     _logger.Debug("Message of type: " + message.GetType() + " was not handled, sending it to custom server parser");
@@ -84,10 +83,9 @@ namespace RtsNetworkingLibrary.networking.utils
             }
             handledMessages = 0;
             // Handle Client messages
-            while (!_inboundClientMessages.IsEmpty && handledMessages++ < _settings.maxHandledMessagesPerFrame)
+            while (_inboundClientMessages.Count > 0 && handledMessages++ < _settings.maxHandledMessagesPerFrame)
             {
-                NetworkMessage message;
-                _inboundClientMessages.TryDequeue(out message);
+                NetworkMessage message = _inboundClientMessages.Dequeue();
                 if (!_defaultClientMessageParser.ParseMessage(message))
                 {
                     _logger.Debug("Message of type: " + message.GetType() + " was not handled, sending it to custom client parser");

@@ -18,6 +18,7 @@ namespace RtsNetworkingLibrary.client
         private readonly NetworkManager _networkManager;
         private readonly Logger _logger;
         private NetworkStream _stream;
+        private PlayerInfo _playerInfo;
 
         private readonly byte[] _headerBuffer;
         private byte[] _dataBuffer;
@@ -28,6 +29,7 @@ namespace RtsNetworkingLibrary.client
 
         private readonly List<IClientListener> _listeners = new List<IClientListener>();
 
+        public List<IClientListener> Listeners => _listeners;
 
         public int ClientId { private set; get; } = -1;
 
@@ -48,12 +50,13 @@ namespace RtsNetworkingLibrary.client
                 {
                     _tcpClient.Connect(endPoint);
                     _stream = _tcpClient.GetStream();
-                    NetworkHelper.SendSingleMessage(_tcpClient, new ConnectMessage(Environment.UserName), -1);
+                    NetworkHelper.SendSingleMessage(_tcpClient, new ConnectMessage(_networkManager.username), new PlayerInfo(ClientId, _networkManager.username));
                     NetworkMessage message = NetworkHelper.ReceiveSingleMessage(_tcpClient);
                     if (message is ConnectMessage)
                     {
                         ConnectMessage connectMessage = (ConnectMessage) message;
                         this.ClientId = connectMessage.playerInfo.userId;
+                        this._playerInfo = connectMessage.playerInfo;
                         _logger.Debug("Received client id: " + ClientId);
                         _stream.BeginRead(_headerBuffer, 0, _headerBuffer.Length, ReadHeader, null);
                         // Notify callbacks that we're connected
@@ -150,7 +153,7 @@ namespace RtsNetworkingLibrary.client
         {
             if(!_tcpClient.Connected)
                 throw new Exception("Client is not connected! Can't send a message to the server!");
-            NetworkHelper.SendSingleMessage(_tcpClient, message, ClientId);
+            NetworkHelper.SendSingleMessage(_tcpClient, message, _playerInfo);
         }
 
         public void AddListener(IClientListener listener)

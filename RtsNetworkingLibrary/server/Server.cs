@@ -16,17 +16,12 @@ namespace RtsNetworkingLibrary.server
     {
         private readonly Logger _logger;
         
-        private int clientCounter = 0;
-        
         private TcpListener _server;
-        private UdpClient _udpClient;
-
-        // Clients
-        private ClientHandler[] clients;
         private ServerSettings _serverSettings;
         private MessageHandler _messageHandler;
         
         private readonly List<IServerListener> _listeners = new List<IServerListener>();
+        private readonly List<ClientHandler> _clientsList = new List<ClientHandler>();
 
         // TODO reduce client id on client-disconnect
         
@@ -45,7 +40,7 @@ namespace RtsNetworkingLibrary.server
                 this._serverSettings = settings;
                 this._messageHandler = messageHandler;
                 _server = new TcpListener(IPAddress.Any, settings.port);
-                clients = new ClientHandler[settings.maxPlayers];
+                // clients = new ClientHandler[settings.maxPlayers];
                 ServerRunning = true;
                 _server.Start(10);
                 _server.BeginAcceptTcpClient(AcceptTcpClients, null);
@@ -56,33 +51,29 @@ namespace RtsNetworkingLibrary.server
 
         public void DisconnectClient(int clientId)
         {
-            _listeners.ForEach(listener => listener?.OnClientDisconnected(clients[clientId].playerInfo));
-            clients[clientId].Disconnect();
-            clients[clientId] = null;
+            ClientHandler handler = _clientsList.Find(client => client.playerInfo.userId == clientId);
+            if (handler != null)
+            {
+                _listeners.ForEach(listener => listener?.OnClientDisconnected(handler.playerInfo));
+                handler.Close();
+                _clientsList.Remove(handler);   
+            }
         }
 
-        /**
-         * Removes the client from the list of clientHandlers
-         * The client will no longer be updated
-         */
-        public void RemoveClient(int clientId)
-        {
-            clients[clientId] = null;
-        }
 
         public void StopServer()
         {
             if (_server != null && ServerRunning)
             {
-                foreach (ClientHandler client in clients)
+                foreach (ClientHandler client in _clientsList)
                 {
-                    client?.Disconnect("Disconnecting client, due to server stopping");
+                    client?.Close("Disconnecting client, due to server stopping");
                 }
+                _clientsList.Clear();
                 _server.Stop();
                 _server.Server.Dispose();
             }
             ServerRunning = false;
-            clientCounter = 0;
             _listeners.ForEach(listener => listener?.OnServerStopped());
             _logger.Debug("Server stopped");
         }
@@ -93,11 +84,18 @@ namespace RtsNetworkingLibrary.server
             NetworkMessage message = NetworkHelper.ReceiveSingleMessage(client);
             if (message is ConnectMessage)
             {
-                message.playerInfo.userId = clientCounter;
-                NetworkHelper.SendSingleMessage(client, message, clientCounter);
-                clients[clientCounter] = new ClientHandler(client, this, _serverSettings, _messageHandler, message.playerInfo);
+                int userId = _clientsList.Count;
+                message.playerInfo.userId = userId;
+                NetworkHelper.SendSingleMessage(client, message, message.playerInfo);
+                foreach (ClientHandler c in _clientsList)
+                {
+                    ConnectMessage msg = new ConnectMessage();
+                    msg.playerInfo = c.playerInfo;
+                    NetworkHelper.SendSingleMessage(client, msg, msg.playerInfo);
+                }
+                _clientsList.Add(new ClientHandler(client, this, _serverSettings, _messageHandler, message.playerInfo));
                 _listeners.ForEach(listener => listener?.OnClientConnected(message.playerInfo));
-                clientCounter++;
+                TcpBroadcast(message, userId);
                 _logger.Debug("New Client connected: " + message.playerInfo.userId + " = " + message.playerInfo.username);
             }
             else
@@ -105,7 +103,7 @@ namespace RtsNetworkingLibrary.server
                 _logger.Debug("New Client didn't send a ConnectMessage! Closing the client");
             }
             
-            if(clientCounter < _serverSettings.maxPlayers)
+            if(_clientsList.Count < _serverSettings.maxPlayers)
                 _server.BeginAcceptTcpClient(AcceptTcpClients, null);
         }
 
@@ -117,7 +115,7 @@ namespace RtsNetworkingLibrary.server
             {
                 throw new Exception("Server hasn't been started yet");
             }
-            foreach (ClientHandler clientHandler in clients)
+            foreach (ClientHandler clientHandler in _clientsList)
             {
                 if (clientHandler != null && clientHandler.playerInfo.userId != exceptUserId)
                 {
@@ -128,11 +126,8 @@ namespace RtsNetworkingLibrary.server
 
         public void SendToClient(int clientId, NetworkMessage networkMessage)
         {
-            foreach (ClientHandler handler in clients)
-            {
-                if(handler.playerInfo.userId == clientId)
-                    handler.SendTcpMessage(networkMessage);
-            }
+            ClientHandler client = _clientsList.Find(c => c.playerInfo.userId == clientId);
+            client?.SendTcpMessage(networkMessage);
         }
 
         public void AddListener(IServerListener listener)

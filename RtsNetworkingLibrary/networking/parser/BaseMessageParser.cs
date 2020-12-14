@@ -13,6 +13,9 @@ namespace RtsNetworkingLibrary.networking.parser
             bool handled = true;
             switch (message)
             {
+                case ConnectMessage c:
+                    HandleClientConnectMessage(c);
+                    break;
                 case BuildMessage b:
                     HandleBuildMessage(b);
                     break;
@@ -37,6 +40,9 @@ namespace RtsNetworkingLibrary.networking.parser
             }
             return handled;
         }
+
+        protected abstract void HandleClientConnectMessage(ConnectMessage connectMessage);
+        
         protected abstract void HandleBuildMessage(BuildMessage buildMessage);
         
         protected  abstract void HandleDestroyMessage(DestroyMessage message);

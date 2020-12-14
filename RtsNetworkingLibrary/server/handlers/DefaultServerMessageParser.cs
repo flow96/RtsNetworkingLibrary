@@ -24,6 +24,12 @@ namespace RtsNetworkingLibrary.server.handlers
         }
 
 
+        protected override void HandleClientConnectMessage(ConnectMessage connectMessage)
+        {
+            _logger.Debug("Received Connect message");
+            _networkManager.TcpServerSendBroadcast(connectMessage, connectMessage.playerInfo.userId);
+        }
+
         protected override void HandleBuildMessage(BuildMessage buildMessage)
         {
            _logger.Debug("Server received handle build message");

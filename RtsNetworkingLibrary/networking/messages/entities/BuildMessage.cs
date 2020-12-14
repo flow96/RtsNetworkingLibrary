@@ -12,6 +12,7 @@ namespace RtsNetworkingLibrary.networking.messages.entities
         public ulong entityId;
         public readonly Vector position;
         public readonly Vector rotation;
+        public int callbackHashCode = 0;
         
         public BuildMessage(string prefabName, Vector position, Vector rotation, ulong entityId = 0)
         {

@@ -26,9 +26,9 @@ namespace RtsNetworkingLibrary.networking.utils
         }
         
         
-        public static void SendSingleMessage(TcpClient client, NetworkMessage message, int clientId)
+        public static void SendSingleMessage(TcpClient client, NetworkMessage message, PlayerInfo playerInfo)
         {
-            message.playerInfo.userId = clientId;
+            message.playerInfo = playerInfo;
             byte[] data = NetworkConverter.Serialize(message);
             byte[] header = BitConverter.GetBytes(data.Length);
             client.GetStream().Write(header, 0, header.Length);

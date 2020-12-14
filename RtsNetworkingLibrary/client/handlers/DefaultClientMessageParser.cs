@@ -26,6 +26,12 @@ namespace RtsNetworkingLibrary.client.handlers
             _networkManager = GetComponent<NetworkManager>();
         }
 
+        protected override void HandleClientConnectMessage(ConnectMessage connectMessage)
+        {
+            if(connectMessage.playerInfo.userId != _networkManager.ClientId)
+                _networkManager.Client.Listeners.ForEach(l => l.OtherPlayerConnected(connectMessage.playerInfo));
+        }
+
         protected override void HandleBuildMessage(BuildMessage buildMessage)
         {
             _logger.Debug("Handling Build message");
@@ -44,6 +50,15 @@ namespace RtsNetworkingLibrary.client.handlers
                 networkMonoBehaviour.entityId = buildMessage.entityId;
                 networkMonoBehaviour.prefabName = buildMessage.prefabName;
                 _networkManager.OnNetworkObjectSpawned(networkMonoBehaviour.entityId, networkMonoBehaviour, spawnedObject);
+            }
+
+            if (buildMessage.callbackHashCode != 0)
+            {
+                if(_networkManager.instantiateCallbacks.ContainsKey(buildMessage.callbackHashCode))
+                {
+                    _networkManager.instantiateCallbacks[buildMessage.callbackHashCode](spawnedObject);
+                    _networkManager.instantiateCallbacks.Remove(buildMessage.callbackHashCode);
+                }
             }
         }
 
@@ -105,7 +120,14 @@ namespace RtsNetworkingLibrary.client.handlers
 
         protected override void HandleDisconnectMessage(DisconnectMessage message)
         {
-            
+            if (message.playerInfo.userId == _networkManager.ClientId)
+            {
+                _networkManager.Client.Disconnect("Reicved close event from server -> Closing connection.");
+            }
+            else
+            {
+                _networkManager.Client.Listeners.ForEach(l => l.OtherPlayerDisconnected(message.playerInfo));
+            }
         }
     }
 }
