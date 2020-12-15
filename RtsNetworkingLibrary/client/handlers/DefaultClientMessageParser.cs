@@ -2,11 +2,13 @@ using System;
 using RtsNetworkingLibrary.networking.manager;
 using RtsNetworkingLibrary.networking.messages.connection;
 using RtsNetworkingLibrary.networking.messages.entities;
+using RtsNetworkingLibrary.networking.messages.game;
 using RtsNetworkingLibrary.networking.parser;
 using RtsNetworkingLibrary.networking.utils;
 using RtsNetworkingLibrary.unity.@base;
 using RtsNetworkingLibrary.utils;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace RtsNetworkingLibrary.client.handlers
 {
@@ -128,6 +130,11 @@ namespace RtsNetworkingLibrary.client.handlers
             {
                 _networkManager.Client.Listeners.ForEach(l => l.OtherPlayerDisconnected(message.playerInfo));
             }
+        }
+
+        protected override void HandleStartGameMessage(StartGameMessage message)
+        {
+            SceneManager.LoadScene(message.sceneName);
         }
     }
 }

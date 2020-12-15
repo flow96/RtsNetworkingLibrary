@@ -5,6 +5,7 @@ using System.Net.Sockets;
 using RtsNetworkingLibrary.client;
 using RtsNetworkingLibrary.networking.messages.@base;
 using RtsNetworkingLibrary.networking.messages.entities;
+using RtsNetworkingLibrary.networking.messages.game;
 using RtsNetworkingLibrary.networking.utils;
 using RtsNetworkingLibrary.server;
 using RtsNetworkingLibrary.server.utils;
@@ -125,6 +126,13 @@ namespace RtsNetworkingLibrary.networking.manager
             }
         }
 
+        public void StartGame(string sceneName)
+        {
+            if (!IsServer)
+                throw new Exception("Only the server is allowed to start game!");
+            TcpServerSendBroadcast(new StartGameMessage(sceneName));
+        }
+        
         public void StartServer()
         {
             _server.StartServer(this._serverSettings, this._messageHandler);
@@ -211,6 +219,7 @@ namespace RtsNetworkingLibrary.networking.manager
         {
             if(!IsServer)
                 throw new Exception("Only the server is allowed to send broadcast messages!");
+            _server.StopAcceptingClients();
             _server.TcpBroadcast(networkMessage, exceptUserId);
         }
 

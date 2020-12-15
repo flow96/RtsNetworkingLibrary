@@ -23,6 +23,8 @@ namespace RtsNetworkingLibrary.server
         private readonly List<IServerListener> _listeners = new List<IServerListener>();
         private readonly List<ClientHandler> _clientsList = new List<ClientHandler>();
 
+        private bool _isAccepting = false;
+
         // TODO reduce client id on client-disconnect
         
         public Server()
@@ -44,6 +46,7 @@ namespace RtsNetworkingLibrary.server
                 ServerRunning = true;
                 _server.Start(10);
                 _server.BeginAcceptTcpClient(AcceptTcpClients, null);
+                _isAccepting = true;
                 _logger.Debug("Server started");
                 _listeners.ForEach(listener => listener?.OnServerStarted());
             }
@@ -81,6 +84,10 @@ namespace RtsNetworkingLibrary.server
         private void AcceptTcpClients(IAsyncResult ar)
         {
             TcpClient client = _server.EndAcceptTcpClient(ar);
+            if (!_isAccepting)
+            {
+                return;
+            }
             NetworkMessage message = NetworkHelper.ReceiveSingleMessage(client);
             if (message is ConnectMessage)
             {
@@ -102,12 +109,21 @@ namespace RtsNetworkingLibrary.server
             {
                 _logger.Debug("New Client didn't send a ConnectMessage! Closing the client");
             }
-            
-            if(_clientsList.Count < _serverSettings.maxPlayers)
+
+            if (_clientsList.Count < _serverSettings.maxPlayers)
+            {
+                _isAccepting = true;
                 _server.BeginAcceptTcpClient(AcceptTcpClients, null);
+            }
+            else
+                _isAccepting = false;
         }
 
 
+        public void StopAcceptingClients()
+        {
+            _isAccepting = false;
+        }
 
         public void TcpBroadcast(NetworkMessage message, int exceptUserId = -1)
         {

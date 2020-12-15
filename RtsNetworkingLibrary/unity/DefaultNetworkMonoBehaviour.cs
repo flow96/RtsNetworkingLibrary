@@ -4,9 +4,7 @@ namespace RtsNetworkingLibrary.unity
 {
     public class DefaultNetworkMonoBehaviour:NetworkMonoBehaviour
     {
-        
-        
-        
+
         public override void ClientUpdate(bool isLocalPlayer)
         {
             

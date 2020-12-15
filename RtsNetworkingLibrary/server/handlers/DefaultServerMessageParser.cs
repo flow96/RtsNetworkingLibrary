@@ -2,6 +2,7 @@ using RtsNetworkingLibrary.networking;
 using RtsNetworkingLibrary.networking.manager;
 using RtsNetworkingLibrary.networking.messages.connection;
 using RtsNetworkingLibrary.networking.messages.entities;
+using RtsNetworkingLibrary.networking.messages.game;
 using RtsNetworkingLibrary.networking.parser;
 using Logger = RtsNetworkingLibrary.utils.Logger;
 
@@ -65,6 +66,13 @@ namespace RtsNetworkingLibrary.server.handlers
         {
             _logger.Debug("Received disconnect from: " + disconnectMessage.playerInfo.username + " (" + disconnectMessage.playerInfo.userId + ")");
             _networkManager.Server.DisconnectClient(disconnectMessage.playerInfo.userId);
+        }
+
+        protected override void HandleStartGameMessage(StartGameMessage message)
+        {
+            _logger.Debug("Game started message");
+            _networkManager.Server.StopAcceptingClients();
+            _networkManager.TcpServerSendBroadcast(message);
         }
     }
 }

@@ -1,6 +1,7 @@
 using RtsNetworkingLibrary.networking.messages.@base;
 using RtsNetworkingLibrary.networking.messages.connection;
 using RtsNetworkingLibrary.networking.messages.entities;
+using RtsNetworkingLibrary.networking.messages.game;
 using UnityEngine;
 
 namespace RtsNetworkingLibrary.networking.parser
@@ -34,6 +35,9 @@ namespace RtsNetworkingLibrary.networking.parser
                 case TransformUpdateListMessage tUpdate:
                     HandleTransformUpdateListMessage(tUpdate);
                     break;
+                case StartGameMessage st:
+                    HandleStartGameMessage(st);
+                    break;
                 default:
                     handled = false;
                     break;
@@ -54,5 +58,7 @@ namespace RtsNetworkingLibrary.networking.parser
         protected abstract void HandleUpdateSyncVarMessage(UpdateSyncVarMessage updateSyncVarMessage);
         
         protected  abstract void HandleDisconnectMessage(DisconnectMessage message);
+
+        protected abstract void HandleStartGameMessage(StartGameMessage message);
     }
 }

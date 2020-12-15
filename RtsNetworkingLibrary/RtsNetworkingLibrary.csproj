@@ -54,6 +54,7 @@
         <Compile Include="networking\messages\entities\TransformUpdateMessage.cs" />
         <Compile Include="networking\messages\entities\TransformUpdateListMessage.cs" />
         <Compile Include="networking\messages\entities\UpdateSyncVarMessage.cs" />
+        <Compile Include="networking\messages\game\StartGameMessage.cs" />
         <Compile Include="networking\parser\BaseMessageParser.cs" />
         <Compile Include="networking\PlayerInfo.cs" />
         <Compile Include="networking\utils\MessageHandler.cs" />
