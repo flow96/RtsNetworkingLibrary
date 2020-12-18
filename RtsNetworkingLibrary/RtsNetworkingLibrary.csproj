@@ -54,6 +54,7 @@
         <Compile Include="networking\messages\entities\TransformUpdateMessage.cs" />
         <Compile Include="networking\messages\entities\TransformUpdateListMessage.cs" />
         <Compile Include="networking\messages\entities\UpdateSyncVarMessage.cs" />
+        <Compile Include="networking\messages\game\RpcInvokeMessage.cs" />
         <Compile Include="networking\messages\game\StartGameMessage.cs" />
         <Compile Include="networking\parser\BaseMessageParser.cs" />
         <Compile Include="networking\PlayerInfo.cs" />
@@ -67,10 +68,16 @@
         <Compile Include="server\Server.cs" />
         <Compile Include="server\utils\ServerSettings.cs" />
         <Compile Include="unity\attributes\SyncVar.cs" />
+        <Compile Include="unity\base\AttackableUnit.cs" />
         <Compile Include="unity\base\NetworkMonoBehaviour.cs" />
+        <Compile Include="unity\base\BaseTower.cs" />
+        <Compile Include="unity\base\BaseUnit.cs" />
+        <Compile Include="unity\base\NetworkTransform.cs" />
         <Compile Include="unity\callbacks\IClientListener.cs" />
         <Compile Include="unity\callbacks\IServerListener.cs" />
         <Compile Include="unity\DefaultNetworkMonoBehaviour.cs" />
+        <Compile Include="unity\units\DefaultTower.cs" />
+        <Compile Include="unity\units\DefaultUnit.cs" />
         <Compile Include="utils\Consts.cs" />
         <Compile Include="utils\Logger.cs" />
         <Compile Include="utils\Vector.cs" />

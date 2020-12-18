@@ -18,6 +18,7 @@ namespace RtsNetworkingLibrary.networking.utils
     public class MessageHandler : MonoBehaviour
     {
         // Public list of custom message parser
+        [Header("Custom Message Parser")]
         public List<CustomMessageParser> customServerMessageParser = new List<CustomMessageParser>();
         public List<CustomMessageParser> customClientMessageParser = new List<CustomMessageParser>();
 
@@ -27,6 +28,8 @@ namespace RtsNetworkingLibrary.networking.utils
         private BaseMessageParser _defaultClientMessageParser;
         private ServerSettings _settings;
         private NetworkManager _networkManager;
+        
+        
 
         private readonly RtsNetworkingLibrary.utils.Logger _logger;
 

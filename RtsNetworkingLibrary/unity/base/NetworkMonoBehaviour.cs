@@ -1,45 +1,61 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using RtsNetworkingLibrary.networking.manager;
+using RtsNetworkingLibrary.networking.messages.@base;
 using RtsNetworkingLibrary.networking.messages.entities;
+using RtsNetworkingLibrary.networking.messages.game;
 using RtsNetworkingLibrary.unity.attributes;
 using RtsNetworkingLibrary.utils;
 using UnityEngine;
 
 namespace RtsNetworkingLibrary.unity.@base
 {
-    public abstract class NetworkMonoBehaviour : MonoBehaviour
+    public abstract class NetworkMonoBehaviour : NetworkTransform
     {
 
+        [Header("Networking")]
         public string prefabName = "";
         
         public int clientId;
         public ulong entityId;
         public bool syncTransform = true;
+        public bool IsSelected { get; set; } = false;
 
-        private Vector3 _lastPos;
-        private Vector3 _lastRot;
-        private Vector3 _nextPos;
-        private Vector3 _nextRot;
+        private readonly List<NetworkTransform> _subTransforms = new List<NetworkTransform>();
 
         public bool IsLocalPlayer { get; private set; } = true;
         
         private readonly Dictionary<object, object> _syncVars = new Dictionary<object, object>();
         private float _delay = 0;
         private float _fixedDealy = 0;
-        private float _deltaInterpolation = 0;
 
 
         private void Awake()
         {
             _nextPos = transform.position;
             _nextRot = transform.rotation.eulerAngles;
+            FindSubNetworkTransforms(transform);
+            Debug.Log("Found: " + _subTransforms.Count + " childs");
             OnAwake();
+        }
+
+        private void FindSubNetworkTransforms(Transform root)
+        {
+            for (int i = 0; i < root.childCount; i++)
+            {
+                Transform child = root.GetChild(i);
+                NetworkTransform t = child.GetComponent<NetworkTransform>();
+                if(t != null)
+                    _subTransforms.Add(t);
+                FindSubNetworkTransforms(child);
+            }
         }
 
         private void Start()
         {
+            base.Start();
             if (NetworkManager.Instance == null)
             {
                 throw new Exception(
@@ -52,8 +68,7 @@ namespace RtsNetworkingLibrary.unity.@base
             }
 
             _fixedDealy = NetworkManager.Instance.ServerSettings.sendUpdateThresholdPerSecond / 60f;
-            _lastPos = transform.position;
-            _lastRot = transform.rotation.eulerAngles;
+            
             IsLocalPlayer = (NetworkManager.Instance.ClientId == clientId);
             
             FieldInfo[] objectFields = this.GetType().GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
@@ -68,6 +83,8 @@ namespace RtsNetworkingLibrary.unity.@base
 
         private void Update()
         {
+            UpdateNetworkTransform(IsLocalPlayer);
+            _subTransforms.ForEach(networkTransform => networkTransform.UpdateNetworkTransform(IsLocalPlayer));
             if(NetworkManager.Instance.IsServer)
                 ServerUpdate();
             ClientUpdate(IsLocalPlayer);
@@ -82,37 +99,28 @@ namespace RtsNetworkingLibrary.unity.@base
                     UpdateSyncVars();
                 }
             }
-            else
-            {
-                if (!Compare(transform.position, _nextPos) || !Compare(transform.rotation.eulerAngles, _nextRot))
-                {                    
-                    _deltaInterpolation += Time.deltaTime * NetworkManager.Instance.ServerSettings.sendUpdateThresholdPerSecond;
-                    transform.position = Vector3.Lerp(transform.position, _nextPos, _deltaInterpolation);
-                    transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(_nextRot), Time.deltaTime * NetworkManager.Instance.ServerSettings.sendUpdateThresholdPerSecond);
-                }
-            }
         }
 
-        public void SetNextTransform(Vector3 nextPos, Vector3 nextRot)
-        {
-            this._nextPos = nextPos;
-            this._nextRot = nextRot;
-            _deltaInterpolation = 0;
-        }
+        
 
         private void UpdateTransform()
         {
-            if (!Compare(transform.position, _lastPos)|| !Compare(transform.rotation.eulerAngles, _lastRot))
+            if (transformChanged)
             {
-                _lastPos = transform.position;
-                _lastRot = transform.rotation.eulerAngles;
-
+                transformChanged = false;
                 NetworkManager.Instance.EnqueOutboundUpdateMessage(new TransformUpdateMessage(new Vector(_lastPos.x, _lastPos.y, _lastPos.z), 
                     new Vector(_lastRot.x, _lastRot.y, _lastRot.z), entityId));
-                /*
-                NetworkManager.Instance.TcpSendToServer(new TransformUpdateMessage(new Vector(_lastPos.x, _lastPos.y, _lastPos.z), 
-                    new Vector(_lastRot.x, _lastRot.y, _lastRot.z), entityId));
-                    */
+            }
+
+            for (int i = 0; i < _subTransforms.Count; i++)
+            {
+                if (_subTransforms[i].transformChanged)
+                {
+                    Debug.Log("Child updated");
+                    _subTransforms[i].transformChanged = false;
+                    NetworkManager.Instance.EnqueOutboundUpdateMessage(new TransformUpdateMessage(new Vector(_subTransforms[i]._lastPos.x, _subTransforms[i]._lastPos.y, _subTransforms[i]._lastPos.z), 
+                        new Vector(_subTransforms[i]._lastRot.x, _subTransforms[i]._lastRot.y, _subTransforms[i]._lastRot.z), entityId, i));
+                }   
             }
         }
 
@@ -156,11 +164,33 @@ namespace RtsNetworkingLibrary.unity.@base
                 }
             }
         }
+
+        public void UpdateChildTransform(int index, Vector3 nextPos, Vector3 nextRot)
+        {
+            if (_subTransforms.Count > index)
+            {
+                _subTransforms[index].SetNextTransform(nextPos, nextRot);
+            }
+        }
         
         private bool Compare(Vector3 one, Vector3 two)
         {
             float precision = .05f;
             return !(Math.Abs(one.x - two.x) > precision || Math.Abs(one.y - two.y) > precision || Math.Abs(one.z - two.z) > precision);
+        }
+
+        public void Rpc(string methodName, RpcInvokeMessage.RpcTarget target, params object[] arguments)
+        {
+            NetworkManager.Instance.TcpSendToServer(new RpcInvokeMessage(methodName, entityId, target, arguments));
+        }
+
+        public void HandleExternalRpcInvoke(string name, params object[] arguments)
+        {
+            var method = this.GetType().GetMethod(name);
+            if (method != null)
+            {
+                method.Invoke(this, arguments);   
+            }
         }
 
         public virtual void OnAwake(){}

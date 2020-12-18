@@ -79,7 +79,10 @@ namespace RtsNetworkingLibrary.client.handlers
                 NetworkMonoBehaviour networkMonoBehaviour;
                 if (toBeUpdated.TryGetComponent(out networkMonoBehaviour))
                 {
-                    networkMonoBehaviour.SetNextTransform(NetworkHelper.ConvertToVector3(transformUpdateMessage.position), NetworkHelper.ConvertToVector3(transformUpdateMessage.rotation));
+                    if (transformUpdateMessage.subTransformIndex >= 0)
+                        networkMonoBehaviour.UpdateChildTransform(transformUpdateMessage.subTransformIndex, NetworkHelper.ConvertToVector3(transformUpdateMessage.position), NetworkHelper.ConvertToVector3(transformUpdateMessage.rotation));
+                    else
+                        networkMonoBehaviour.SetNextTransform(NetworkHelper.ConvertToVector3(transformUpdateMessage.position), NetworkHelper.ConvertToVector3(transformUpdateMessage.rotation));
                 }
                 else
                 {
@@ -135,6 +138,18 @@ namespace RtsNetworkingLibrary.client.handlers
         protected override void HandleStartGameMessage(StartGameMessage message)
         {
             SceneManager.LoadScene(message.sceneName);
+        }
+
+        protected override void HandleRpcInvokeMessage(RpcInvokeMessage message)
+        {
+            _logger.Debug("Received rpc call");
+            if (_networkManager.SpawnedObjects.ContainsKey(message.entityId))
+            {
+                NetworkMonoBehaviour networkMonoBehaviour = _networkManager.SpawnedObjects[message.entityId];
+                networkMonoBehaviour.HandleExternalRpcInvoke(message.methodName, message.arguments);
+            }
+            else
+                throw new Exception("NetworkMonoBehaviour object with id: " + message.entityId + " does not exist!");
         }
     }
 }

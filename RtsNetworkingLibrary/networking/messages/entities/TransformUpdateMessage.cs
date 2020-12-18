@@ -10,12 +10,14 @@ namespace RtsNetworkingLibrary.networking.messages.entities
         public readonly Vector position;
         public readonly Vector rotation;
         public readonly ulong entityId;
+        public readonly int subTransformIndex;
 
-        public TransformUpdateMessage(Vector position, Vector rotation, ulong entityId)
+        public TransformUpdateMessage(Vector position, Vector rotation, ulong entityId, int subTransformIndex = -1)
         {
             this.position = position;
             this.rotation = rotation;
             this.entityId = entityId;
+            this.subTransformIndex = subTransformIndex;
         }
 
         public override bool Equals(object obj)

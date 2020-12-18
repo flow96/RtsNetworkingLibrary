@@ -22,6 +22,7 @@ namespace RtsNetworkingLibrary.networking.manager
     {
         public static NetworkManager Instance;
 
+        [Header("Player name")]
         public string username;
 
         private Server _server;
@@ -55,6 +56,8 @@ namespace RtsNetworkingLibrary.networking.manager
         public Server Server => _server;
 
         public List<PlayerInfo> ConnectedPlayers => _connectedPlayers;
+
+        public Dictionary<ulong, NetworkMonoBehaviour> SpawnedObjects => _spawnedObjects;
 
 
         public string Username
@@ -236,7 +239,6 @@ namespace RtsNetworkingLibrary.networking.manager
             }
             TcpSendToServer(buildMessage);
         }
-
 
         public void OnNetworkObjectSpawned(ulong entityId, NetworkMonoBehaviour networkMonoBehaviour, GameObject gameObject)
         {

@@ -38,6 +38,9 @@ namespace RtsNetworkingLibrary.networking.parser
                 case StartGameMessage st:
                     HandleStartGameMessage(st);
                     break;
+                case RpcInvokeMessage rpcInvoke:
+                    HandleRpcInvokeMessage(rpcInvoke);
+                    break;
                 default:
                     handled = false;
                     break;
@@ -60,5 +63,7 @@ namespace RtsNetworkingLibrary.networking.parser
         protected  abstract void HandleDisconnectMessage(DisconnectMessage message);
 
         protected abstract void HandleStartGameMessage(StartGameMessage message);
+
+        protected abstract void HandleRpcInvokeMessage(RpcInvokeMessage message);
     }
 }

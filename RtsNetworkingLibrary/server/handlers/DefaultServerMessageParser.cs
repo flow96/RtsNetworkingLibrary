@@ -74,5 +74,11 @@ namespace RtsNetworkingLibrary.server.handlers
             _networkManager.Server.StopAcceptingClients();
             _networkManager.TcpServerSendBroadcast(message);
         }
+
+        protected override void HandleRpcInvokeMessage(RpcInvokeMessage message)
+        {
+            _logger.Debug("Received RPC Call, methodname: " + message.methodName);
+            _networkManager.TcpServerSendBroadcast(message, (message.target == RpcInvokeMessage.RpcTarget.ExcludeMe ? message.playerInfo.userId : -1));
+        }
     }
 }
