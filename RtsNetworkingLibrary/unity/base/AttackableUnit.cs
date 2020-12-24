@@ -1,4 +1,7 @@
+using System;
 using System.Security.Cryptography;
+using RtsNetworkingLibrary.networking.manager;
+using RtsNetworkingLibrary.networking.messages.entities;
 using RtsNetworkingLibrary.unity.attributes;
 using UnityEngine;
 
@@ -22,12 +25,15 @@ namespace RtsNetworkingLibrary.unity.@base
 
         public void TakeDamage(float damage)
         {
-            health -= damage;
-            Debug.Log("Taking damage: " + health);
-            if(health <= 0)
-                Destroy();
+            if (health > 0)
+            {
+                health -= damage;
+                Debug.Log("Taking damage: " + health);
+                if (health <= 0 && IsLocalPlayer)
+                {
+                    NetworkManager.Instance.TcpSendToServer(new DestroyMessage(this.entityId));
+                }
+            }
         }
-
-        protected abstract void Destroy();
     }
 }

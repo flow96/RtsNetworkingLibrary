@@ -53,6 +53,10 @@ namespace RtsNetworkingLibrary.client.handlers
                 networkMonoBehaviour.prefabName = buildMessage.prefabName;
                 _networkManager.OnNetworkObjectSpawned(networkMonoBehaviour.entityId, networkMonoBehaviour, spawnedObject);
             }
+            else
+            {
+                throw new Exception("A network GameObject should also have  NetworkMonoBehaviour Script on it");
+            }
 
             if (buildMessage.callbackHashCode != 0)
             {
@@ -66,8 +70,12 @@ namespace RtsNetworkingLibrary.client.handlers
 
         protected override void HandleDestroyMessage(DestroyMessage message)
         {
-            Destroy(_networkManager.GetGameObjectById(message.entityId));
-            _networkManager.OnNetworkObjectDestroyed(message.entityId);
+            _logger.Debug("Destroying id: " + message.entityId);
+            if (_networkManager.SpawnedObjects.ContainsKey(message.entityId))
+            {
+                Destroy(_networkManager.GetGameObjectById(message.entityId).gameObject);
+                _networkManager.OnNetworkObjectDestroyed(message.entityId);   
+            }
         }
 
         protected override void HandleTransformUpdateMessage(TransformUpdateMessage transformUpdateMessage)
@@ -148,8 +156,6 @@ namespace RtsNetworkingLibrary.client.handlers
                 NetworkMonoBehaviour networkMonoBehaviour = _networkManager.SpawnedObjects[message.entityId];
                 networkMonoBehaviour.HandleExternalRpcInvoke(message.methodName, message.arguments);
             }
-            else
-                throw new Exception("NetworkMonoBehaviour object with id: " + message.entityId + " does not exist!");
         }
     }
 }

@@ -240,6 +240,11 @@ namespace RtsNetworkingLibrary.networking.manager
             TcpSendToServer(buildMessage);
         }
 
+        public void Instantiate(string assetPrefabName, Action<GameObject> callback = null)
+        {
+            this.Instantiate(assetPrefabName, new Vector3(), new Quaternion(), callback);
+        }
+
         public void OnNetworkObjectSpawned(ulong entityId, NetworkMonoBehaviour networkMonoBehaviour, GameObject gameObject)
         {
             _spawnedObjects.Add(entityId,  networkMonoBehaviour);

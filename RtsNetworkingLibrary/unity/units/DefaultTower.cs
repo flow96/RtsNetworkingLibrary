@@ -13,10 +13,5 @@ namespace RtsNetworkingLibrary.unity.units
         {
             
         }
-
-        protected override void Destroy()
-        {
-            
-        }
     }
 }
