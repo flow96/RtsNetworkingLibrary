@@ -111,12 +111,11 @@ namespace RtsNetworkingLibrary.unity.@base
                 NetworkManager.Instance.EnqueOutboundUpdateMessage(new TransformUpdateMessage(new Vector(_lastPos.x, _lastPos.y, _lastPos.z), 
                     new Vector(_lastRot.x, _lastRot.y, _lastRot.z), entityId));
             }
-
+            
             for (int i = 0; i < _subTransforms.Count; i++)
             {
                 if (_subTransforms[i].transformChanged)
                 {
-                    Debug.Log("Child updated");
                     _subTransforms[i].transformChanged = false;
                     NetworkManager.Instance.EnqueOutboundUpdateMessage(new TransformUpdateMessage(new Vector(_subTransforms[i]._lastPos.x, _subTransforms[i]._lastPos.y, _subTransforms[i]._lastPos.z), 
                         new Vector(_subTransforms[i]._lastRot.x, _subTransforms[i]._lastRot.y, _subTransforms[i]._lastRot.z), entityId, i));

@@ -6,8 +6,7 @@ namespace RtsNetworkingLibrary.unity.@base
     {
 
         public float movingSpeed = 10;
-        [Header("Healthbar")] public Canvas healthBarCanvas;
-
-
+        [Header("Healthbar")] public GameObject healthBarCanvas;
+        public RectTransform foregroundBar;
     }
 }

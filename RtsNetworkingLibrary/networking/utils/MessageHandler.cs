@@ -70,7 +70,7 @@ namespace RtsNetworkingLibrary.networking.utils
         private void Update()
         {
             int handledMessages = 0;
-            // Handle Server messages           
+            // Handle Server messages
             while (_inboundServerMessages.Count > 0 && handledMessages++ < _settings.maxHandledMessagesPerFrame)
             {
                 NetworkMessage message = _inboundServerMessages.Dequeue();

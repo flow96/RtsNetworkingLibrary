@@ -11,6 +11,8 @@ namespace RtsNetworkingLibrary.unity.@base
         public Vector3 _lastRot;
         public Vector3 _nextPos;
         public Vector3 _nextRot;
+
+        private Vector3 _lerpPos;
         
         private float _deltaInterpolation = 0;
 
@@ -36,9 +38,10 @@ namespace RtsNetworkingLibrary.unity.@base
                     transformChanged = true;
                 }
             }else if (!Compare(transform.position, _nextPos) || !Compare(transform.rotation.eulerAngles, _nextRot))
-            {                    
+            {
                 _deltaInterpolation += Time.deltaTime * NetworkManager.Instance.ServerSettings.sendUpdateThresholdPerSecond;
-                transform.position = Vector3.Lerp(transform.position, _nextPos, _deltaInterpolation);
+                transform.position = Vector3.Lerp(_lerpPos, _nextPos, _deltaInterpolation);
+                //transform.position = Vector3.Lerp(transform.position, _nextPos, Time.deltaTime);
                 transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(_nextRot), Time.deltaTime * NetworkManager.Instance.ServerSettings.sendUpdateThresholdPerSecond);
             }   
         }
@@ -55,6 +58,7 @@ namespace RtsNetworkingLibrary.unity.@base
         {
             this._nextPos = nextPos;
             this._nextRot = nextRot;
+            this._lerpPos = transform.position;
             _deltaInterpolation = 0;
         }
     }
