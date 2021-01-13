@@ -22,8 +22,9 @@ namespace RtsNetworkingLibrary.unity.@base
         protected void Start()
         {
             _lastPos = transform.position;
-            _lastRot = transform.rotation.eulerAngles;
+            _lerpPos = _lastPos;
             _nextPos = _lastPos;
+            _lastRot = transform.rotation.eulerAngles;
             _nextRot = _lastRot;
         }
 
