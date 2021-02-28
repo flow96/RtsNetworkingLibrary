@@ -1,0 +1,304 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="RtsNetworkingLibrary.client.Client" Collapsed="true">
+    <Position X="21.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAABEAIABAEBAAgAIAgIBAMEAkIACAAAQAAAAAABA=</HashCode>
+      <FileName>client\Client.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RtsNetworkingLibrary.client.handlers.DefaultClientMessageParser" Collapsed="true">
+    <Position X="5.25" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACBAAAAAMAAAAAAAICAAAAABAACABAACAUA=</HashCode>
+      <FileName>client\handlers\DefaultClientMessageParser.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RtsNetworkingLibrary.networking.manager.NetworkManager" BaseTypeListCollapsed="true">
+    <Position X="18.5" Y="2.75" Width="1.75" />
+    <Compartments>
+      <Compartment Name="Properties" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>QQQAABICEAABAEAhwRwBAAEoZQEgAApAQAAAAgQFIFY=</HashCode>
+      <FileName>networking\manager\NetworkManager.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="RtsNetworkingLibrary.networking.manager.NetworkObject" Collapsed="true">
+    <Position X="23.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAgAAAAAAAAA=</HashCode>
+      <FileName>networking\manager\NetworkObject.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RtsNetworkingLibrary.networking.messages.@base.NetworkMessage">
+    <Position X="10" Y="2" Width="1.5" />
+    <AssociationLine Name="playerInfo" Type="RtsNetworkingLibrary.networking.PlayerInfo" FixedToPoint="true">
+      <Path>
+        <Point X="11.5" Y="2.75" />
+        <Point X="12.5" Y="2.75" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.06" Y="0.067" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAA=</HashCode>
+      <FileName>networking\messages\base\NetworkMessage.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="playerInfo" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="RtsNetworkingLibrary.networking.messages.connection.ConnectMessage" Collapsed="true">
+    <Position X="9" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>networking\messages\connection\ConnectMessage.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RtsNetworkingLibrary.networking.messages.connection.DisconnectMessage" Collapsed="true">
+    <Position X="9.5" Y="6" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>networking\messages\connection\DisconnectMessage.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RtsNetworkingLibrary.networking.messages.entities.BuildMessage" Collapsed="true">
+    <Position X="7.25" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAAAAAAAACACAIAAAAAIAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>networking\messages\entities\BuildMessage.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RtsNetworkingLibrary.networking.messages.entities.DestroyMessage" Collapsed="true">
+    <Position X="9" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>networking\messages\entities\DestroyMessage.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RtsNetworkingLibrary.networking.messages.entities.TransformUpdateListMessage" Collapsed="true">
+    <Position X="11.75" Y="6" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAI=</HashCode>
+      <FileName>networking\messages\entities\TransformUpdateListMessage.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RtsNetworkingLibrary.networking.messages.entities.TransformUpdateMessage" Collapsed="true">
+    <Position X="11" Y="4.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAABgACAIAAAAAIAAIAAAAAAAAAAAAA=</HashCode>
+      <FileName>networking\messages\entities\TransformUpdateMessage.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RtsNetworkingLibrary.networking.messages.entities.UpdateSyncVarMessage" Collapsed="true">
+    <Position X="11" Y="3.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAQAAAAAAA=</HashCode>
+      <FileName>networking\messages\entities\UpdateSyncVarMessage.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RtsNetworkingLibrary.networking.messages.game.RpcInvokeMessage" Collapsed="true">
+    <Position X="7" Y="3.5" Width="1.75" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAIAAAAAAAAAIgAAIAAAAAAAAAAAA=</HashCode>
+      <FileName>networking\messages\game\RpcInvokeMessage.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RtsNetworkingLibrary.networking.messages.game.StartGameMessage" Collapsed="true">
+    <Position X="7.5" Y="6" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>networking\messages\game\StartGameMessage.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RtsNetworkingLibrary.networking.parser.BaseMessageParser" Collapsed="true">
+    <Position X="6.5" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAAMAAgAAAAACAAAAABAACABAACAQA=</HashCode>
+      <FileName>networking\parser\BaseMessageParser.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RtsNetworkingLibrary.networking.PlayerInfo" Collapsed="true">
+    <Position X="12.5" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAACAAAAAEAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>networking\PlayerInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RtsNetworkingLibrary.networking.utils.MessageHandler" Collapsed="true">
+    <Position X="23.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAACBBAAQAgACIEAAIIAAAAAIAAAAAABAAAEA=</HashCode>
+      <FileName>networking\utils\MessageHandler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RtsNetworkingLibrary.networking.utils.NetworkConverter" Collapsed="true">
+    <Position X="25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAACBAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>networking\utils\NetworkConverter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RtsNetworkingLibrary.networking.utils.NetworkHelper" Collapsed="true">
+    <Position X="26.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAAAAAAAAAQAAAAAAEAAgAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>networking\utils\NetworkHelper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RtsNetworkingLibrary.server.ClientHandler" Collapsed="true">
+    <Position X="23.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAABMAMAABAEAAQAIAAADAMEAEABAAAAAAAACAAAA=</HashCode>
+      <FileName>server\ClientHandler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RtsNetworkingLibrary.server.Server" Collapsed="true">
+    <Position X="25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAAAAAEGABERAgYBAAAAQBYAAAIAAAAAAAAAAAAAA=</HashCode>
+      <FileName>server\Server.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RtsNetworkingLibrary.server.handlers.CustomMessageParser" Collapsed="true">
+    <Position X="26.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>server\handlers\CustomMessageParser.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RtsNetworkingLibrary.server.handlers.DefaultServerMessageParser" Collapsed="true">
+    <Position X="7.5" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACBAAAAAMAAAAAAAICAAAAABAACABAACIUA=</HashCode>
+      <FileName>server\handlers\DefaultServerMessageParser.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RtsNetworkingLibrary.server.utils.ServerSettings" Collapsed="true">
+    <Position X="26.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEBAAAAAAAAEAAAAAAAAAAAAgBAIAIAAAAAAA=</HashCode>
+      <FileName>server\utils\ServerSettings.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RtsNetworkingLibrary.unity.attributes.SyncVar" Collapsed="true">
+    <Position X="21.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>unity\attributes\SyncVar.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RtsNetworkingLibrary.unity.@base.AttackableUnit" Collapsed="true">
+    <Position X="1.5" Y="8.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAIAAAAAAAABAAAEAAAAQAAAAAAAAAAgAAAAAg=</HashCode>
+      <FileName>unity\base\AttackableUnit.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RtsNetworkingLibrary.unity.@base.BaseTower" Collapsed="true">
+    <Position X="2.75" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>unity\base\BaseTower.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RtsNetworkingLibrary.unity.@base.BaseUnit" Collapsed="true">
+    <Position X="0.5" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAggAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>unity\base\BaseUnit.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RtsNetworkingLibrary.unity.@base.NetworkMonoBehaviour" Collapsed="true">
+    <Position X="2.75" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QQQAAAAtQCAEEQgAEAAAAAAAAAIUAAAAgABBAgAAEEA=</HashCode>
+      <FileName>unity\base\NetworkMonoBehaviour.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RtsNetworkingLibrary.unity.@base.NetworkTransform" Collapsed="true">
+    <Position X="2.75" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAACAAAAAAAAgAEAAAQAAAAAAAABRIAgACAAA=</HashCode>
+      <FileName>unity\base\NetworkTransform.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RtsNetworkingLibrary.unity.DefaultNetworkMonoBehaviour" Collapsed="true">
+    <Position X="5" Y="8.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAA=</HashCode>
+      <FileName>unity\DefaultNetworkMonoBehaviour.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RtsNetworkingLibrary.unity.units.DefaultTower" Collapsed="true">
+    <Position X="2.75" Y="11" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAA=</HashCode>
+      <FileName>unity\units\DefaultTower.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RtsNetworkingLibrary.unity.units.DefaultUnit" Collapsed="true">
+    <Position X="0.5" Y="11" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAA=</HashCode>
+      <FileName>unity\units\DefaultUnit.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RtsNetworkingLibrary.utils.Consts" Collapsed="true">
+    <Position X="25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAIAAAAAAAA=</HashCode>
+      <FileName>utils\Consts.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RtsNetworkingLibrary.utils.Logger" Collapsed="true">
+    <Position X="21.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAgAAAAAIAAAIAAAAAAAAAAAgAAAAAAAAAACAA=</HashCode>
+      <FileName>utils\Logger.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RtsNetworkingLibrary.utils.Vector" Collapsed="true">
+    <Position X="23.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAABgAQAAAAA=</HashCode>
+      <FileName>utils\Vector.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="RtsNetworkingLibrary.networking.manager.IInstantiateListener" Collapsed="true">
+    <Position X="23.25" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>networking\manager\IInstantiateListener.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="RtsNetworkingLibrary.unity.callbacks.IClientListener" Collapsed="true">
+    <Position X="21.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAAAAAAAAAAAAAABAAAAAIAQAAAAAAAAAA=</HashCode>
+      <FileName>unity\callbacks\IClientListener.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="RtsNetworkingLibrary.unity.callbacks.IServerListener" Collapsed="true">
+    <Position X="25" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAEAABAAAAAAAAAAACAAACAAAAAAAAAAAAAA=</HashCode>
+      <FileName>unity\callbacks\IServerListener.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="RtsNetworkingLibrary.utils.LoggerType" Collapsed="true">
+    <Position X="21.5" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAABEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>utils\Logger.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

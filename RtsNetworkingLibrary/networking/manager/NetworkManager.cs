@@ -17,7 +17,10 @@ using Logger = RtsNetworkingLibrary.utils.Logger;
 
 namespace RtsNetworkingLibrary.networking.manager
 {
-    [RequireComponent(typeof(ServerSettings)), RequireComponent(typeof(MessageHandler))]
+    [
+        RequireComponent(typeof(ServerSettings)), 
+        RequireComponent(typeof(MessageHandler))
+    ]
     public class NetworkManager : MonoBehaviour, IClientListener
     {
         public static NetworkManager Instance;
@@ -150,18 +153,18 @@ namespace RtsNetworkingLibrary.networking.manager
             }
             ConnectToServer(endPoint);
         }
-
-        public void SetUsername(string username)
-        {
-            this.username = username;
-        }
-
+        
         public void StopServer()
         {
             _server.StopServer();
             IsServer = false;
         }
 
+        public void SetUsername(string username)
+        {
+            this.username = username;
+        }
+        
         /**
          * Connects a client to a specific server ip
          */

@@ -42,7 +42,6 @@ namespace RtsNetworkingLibrary.unity.@base
             {
                 _deltaInterpolation += Time.deltaTime * NetworkManager.Instance.ServerSettings.sendUpdateThresholdPerSecond;
                 transform.position = Vector3.Lerp(_lerpPos, _nextPos, _deltaInterpolation);
-                //transform.position = Vector3.Lerp(transform.position, _nextPos, Time.deltaTime);
                 transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(_nextRot), Time.deltaTime * NetworkManager.Instance.ServerSettings.sendUpdateThresholdPerSecond);
             }   
         }

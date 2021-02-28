@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using RtsNetworkingLibrary.networking.messages.@base;
 
 namespace RtsNetworkingLibrary.networking.messages.entities

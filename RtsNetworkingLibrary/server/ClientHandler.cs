@@ -39,7 +39,6 @@ namespace RtsNetworkingLibrary.server
             this._messageHandler = messageHandler;
             this.playerInfo = playerInfo;
             this._headerBuffer = new byte[_serverSettings.headerBufferByteSize];
-            
             _networkStream.BeginRead(_headerBuffer, 0, _headerBuffer.Length, ReadHeader, null);
         }
 
@@ -59,7 +58,7 @@ namespace RtsNetworkingLibrary.server
                 _dataBuffer = new byte[_messageLength];
                 _networkStream.BeginRead(_dataBuffer, 0, _messageLength, ReadMessage, null);
             }
-            else // Header fully reseived
+            else // Header fully received
             {
                 _logger.Debug("Parts of the header missing (" + _headerReadDelta + "/" + _serverSettings.headerBufferByteSize + ")");
                 _networkStream.BeginRead(_headerBuffer, _headerReadDelta,

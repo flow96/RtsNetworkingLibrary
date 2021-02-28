@@ -49,21 +49,13 @@ namespace RtsNetworkingLibrary.networking.parser
         }
 
         protected abstract void HandleClientConnectMessage(ConnectMessage connectMessage);
-        
         protected abstract void HandleBuildMessage(BuildMessage buildMessage);
-        
         protected  abstract void HandleDestroyMessage(DestroyMessage message);
-
         protected abstract void HandleTransformUpdateMessage(TransformUpdateMessage transformUpdateMessage);
-
         protected abstract void HandleTransformUpdateListMessage(TransformUpdateListMessage transformUpdateListMessage);
-
         protected abstract void HandleUpdateSyncVarMessage(UpdateSyncVarMessage updateSyncVarMessage);
-        
         protected  abstract void HandleDisconnectMessage(DisconnectMessage message);
-
         protected abstract void HandleStartGameMessage(StartGameMessage message);
-
         protected abstract void HandleRpcInvokeMessage(RpcInvokeMessage message);
     }
 }

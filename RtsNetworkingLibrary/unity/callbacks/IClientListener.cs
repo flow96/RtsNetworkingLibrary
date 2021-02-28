@@ -6,10 +6,7 @@ namespace RtsNetworkingLibrary.unity.callbacks
     {
         void OnConnected();
         void OnDisconnected();
-
         void OtherPlayerConnected(PlayerInfo playerInfo);
-
         void OtherPlayerDisconnected(PlayerInfo playerInfo);
-
     }
 }

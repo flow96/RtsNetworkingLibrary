@@ -1,97 +1,99 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-    <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
-    <PropertyGroup>
-        <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-        <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-        <ProjectGuid>{1B4D9250-0189-43E9-A76A-CBFF68A32C26}</ProjectGuid>
-        <OutputType>Library</OutputType>
-        <AppDesignerFolder>Properties</AppDesignerFolder>
-        <RootNamespace>RtsNetworkingLibrary</RootNamespace>
-        <AssemblyName>RtsNetworkingLibrary</AssemblyName>
-        <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-        <FileAlignment>512</FileAlignment>
-    </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-        <PlatformTarget>AnyCPU</PlatformTarget>
-        <DebugSymbols>true</DebugSymbols>
-        <DebugType>full</DebugType>
-        <Optimize>false</Optimize>
-        <OutputPath>bin\Debug\</OutputPath>
-        <DefineConstants>DEBUG;TRACE</DefineConstants>
-        <ErrorReport>prompt</ErrorReport>
-        <WarningLevel>4</WarningLevel>
-    </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-        <PlatformTarget>AnyCPU</PlatformTarget>
-        <DebugType>pdbonly</DebugType>
-        <Optimize>true</Optimize>
-        <OutputPath>bin\Release\</OutputPath>
-        <DefineConstants>TRACE</DefineConstants>
-        <ErrorReport>prompt</ErrorReport>
-        <WarningLevel>4</WarningLevel>
-    </PropertyGroup>
-    <ItemGroup>
-        <Reference Include="System" />
-        <Reference Include="System.Core" />
-        <Reference Include="System.Xml" />
-        <Reference Include="UnityEngine">
-            <HintPath>C:\Program Files\Unity\Hub\Editor\2019.3.10f1\Editor\Data\Managed\UnityEngine.dll</HintPath>
-        </Reference>
-    </ItemGroup>
-    <ItemGroup>
-        <Compile Include="client\Client.cs" />
-        <Compile Include="client\handlers\DefaultClientMessageParser.cs" />
-        <Compile Include="networking\manager\IInstantiateListener.cs" />
-        <Compile Include="networking\manager\NetworkManager.cs" />
-        <Compile Include="networking\manager\NetworkObject.cs" />
-        <Compile Include="networking\messages\base\InboundMessage.cs" />
-        <Compile Include="networking\messages\base\NetworkMessage.cs" />
-        <Compile Include="networking\messages\connection\ConnectMessage.cs" />
-        <Compile Include="networking\messages\connection\DisconnectMessage.cs" />
-        <Compile Include="networking\messages\entities\BuildMessage.cs" />
-        <Compile Include="networking\messages\entities\DestroyMessage.cs" />
-        <Compile Include="networking\messages\entities\TransformUpdateMessage.cs" />
-        <Compile Include="networking\messages\entities\TransformUpdateListMessage.cs" />
-        <Compile Include="networking\messages\entities\UpdateSyncVarMessage.cs" />
-        <Compile Include="networking\messages\game\RpcInvokeMessage.cs" />
-        <Compile Include="networking\messages\game\StartGameMessage.cs" />
-        <Compile Include="networking\parser\BaseMessageParser.cs" />
-        <Compile Include="networking\PlayerInfo.cs" />
-        <Compile Include="networking\utils\MessageHandler.cs" />
-        <Compile Include="networking\utils\NetworkConverter.cs" />
-        <Compile Include="networking\utils\NetworkHelper.cs" />
-        <Compile Include="Properties\AssemblyInfo.cs" />
-        <Compile Include="server\ClientHandler.cs" />
-        <Compile Include="server\handlers\CustomMessageParser.cs" />
-        <Compile Include="server\handlers\DefaultServerMessageParser.cs" />
-        <Compile Include="server\Server.cs" />
-        <Compile Include="server\utils\ServerSettings.cs" />
-        <Compile Include="unity\attributes\SyncVar.cs" />
-        <Compile Include="unity\base\AttackableUnit.cs" />
-        <Compile Include="unity\base\NetworkMonoBehaviour.cs" />
-        <Compile Include="unity\base\BaseTower.cs" />
-        <Compile Include="unity\base\BaseUnit.cs" />
-        <Compile Include="unity\base\NetworkTransform.cs" />
-        <Compile Include="unity\callbacks\IClientListener.cs" />
-        <Compile Include="unity\callbacks\IServerListener.cs" />
-        <Compile Include="unity\DefaultNetworkMonoBehaviour.cs" />
-        <Compile Include="unity\units\DefaultTower.cs" />
-        <Compile Include="unity\units\DefaultUnit.cs" />
-        <Compile Include="utils\Consts.cs" />
-        <Compile Include="utils\Logger.cs" />
-        <Compile Include="utils\Vector.cs" />
-    </ItemGroup>
-    <ItemGroup>
-      <Content Include=".gitignore" />
-    </ItemGroup>
-    <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-    <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{1B4D9250-0189-43E9-A76A-CBFF68A32C26}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>RtsNetworkingLibrary</RootNamespace>
+    <AssemblyName>RtsNetworkingLibrary</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml" />
+    <Reference Include="UnityEngine">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2019.3.10f1\Editor\Data\Managed\UnityEngine.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="client\Client.cs" />
+    <Compile Include="client\handlers\DefaultClientMessageParser.cs" />
+    <Compile Include="networking\manager\IInstantiateListener.cs" />
+    <Compile Include="networking\manager\NetworkManager.cs" />
+    <Compile Include="networking\manager\NetworkObject.cs" />
+    <Compile Include="networking\messages\base\NetworkMessage.cs" />
+    <Compile Include="networking\messages\connection\ConnectMessage.cs" />
+    <Compile Include="networking\messages\connection\DisconnectMessage.cs" />
+    <Compile Include="networking\messages\entities\BuildMessage.cs" />
+    <Compile Include="networking\messages\entities\DestroyMessage.cs" />
+    <Compile Include="networking\messages\entities\TransformUpdateMessage.cs" />
+    <Compile Include="networking\messages\entities\TransformUpdateListMessage.cs" />
+    <Compile Include="networking\messages\entities\UpdateSyncVarMessage.cs" />
+    <Compile Include="networking\messages\game\RpcInvokeMessage.cs" />
+    <Compile Include="networking\messages\game\StartGameMessage.cs" />
+    <Compile Include="networking\parser\BaseMessageParser.cs" />
+    <Compile Include="networking\PlayerInfo.cs" />
+    <Compile Include="networking\utils\MessageHandler.cs" />
+    <Compile Include="networking\utils\NetworkConverter.cs" />
+    <Compile Include="networking\utils\NetworkHelper.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="server\ClientHandler.cs" />
+    <Compile Include="server\handlers\CustomMessageParser.cs" />
+    <Compile Include="server\handlers\DefaultServerMessageParser.cs" />
+    <Compile Include="server\Server.cs" />
+    <Compile Include="server\utils\ServerSettings.cs" />
+    <Compile Include="unity\attributes\SyncVar.cs" />
+    <Compile Include="unity\base\AttackableUnit.cs" />
+    <Compile Include="unity\base\NetworkMonoBehaviour.cs" />
+    <Compile Include="unity\base\BaseTower.cs" />
+    <Compile Include="unity\base\BaseUnit.cs" />
+    <Compile Include="unity\base\NetworkTransform.cs" />
+    <Compile Include="unity\callbacks\IClientListener.cs" />
+    <Compile Include="unity\callbacks\IServerListener.cs" />
+    <Compile Include="unity\DefaultNetworkMonoBehaviour.cs" />
+    <Compile Include="unity\units\DefaultTower.cs" />
+    <Compile Include="unity\units\DefaultUnit.cs" />
+    <Compile Include="utils\Consts.cs" />
+    <Compile Include="utils\Logger.cs" />
+    <Compile Include="utils\Vector.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include=".gitignore" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram1.cd" />
+    <None Include="ClassDiagram5.cd" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
          Other similar extension points exist, see Microsoft.Common.targets.
     <Target Name="BeforeBuild">
     </Target>
     <Target Name="AfterBuild">
     </Target>
     -->
-
 </Project>

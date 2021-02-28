@@ -29,5 +29,10 @@ namespace RtsNetworkingLibrary.networking.messages.entities
             }
             return false;
         }
+
+        public override int GetHashCode()
+        {
+            return entityId.GetHashCode();
+        }
     }
 }

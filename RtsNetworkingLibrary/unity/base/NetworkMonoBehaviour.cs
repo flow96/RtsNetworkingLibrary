@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using RtsNetworkingLibrary.networking.manager;
-using RtsNetworkingLibrary.networking.messages.@base;
 using RtsNetworkingLibrary.networking.messages.entities;
 using RtsNetworkingLibrary.networking.messages.game;
 using RtsNetworkingLibrary.unity.attributes;

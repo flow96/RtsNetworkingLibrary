@@ -25,7 +25,6 @@ namespace RtsNetworkingLibrary.server
 
         private bool _isAccepting = false;
 
-        // TODO reduce client id on client-disconnect
         
         public Server()
         {
@@ -108,6 +107,7 @@ namespace RtsNetworkingLibrary.server
             else
             {
                 _logger.Debug("New Client didn't send a ConnectMessage! Closing the client");
+                client.Close();
             }
 
             if (_clientsList.Count < _serverSettings.maxPlayers)
